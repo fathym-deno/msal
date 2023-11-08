@@ -1,4 +1,4 @@
-# MSAL for Deno Fresh
+# MSAL for Deno
 
 This is an implementation of the Azure MSAL (Microsoft Authentication Library) for Deno using msal-node.
 
@@ -8,7 +8,9 @@ The tutorial provides a step-by-step guide on how to sign in users and acquire t
 
 This implementation aims to provide similar functionality, but for Deno environments.
 
-## Getting Started with MSAL
+The following explains how to use with Deno Fresh, using this with Deno standalone and other frameworks is possible. Pull requests are welcome to fill out this additional documentation.
+
+## Getting Started with MSAL in Deno Fresh
 
 To get started with MSAL for Deno, you need to add the following to your `deno.json` configuration file:
 
