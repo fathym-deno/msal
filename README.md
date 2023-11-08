@@ -7,3 +7,5 @@ This project is based on the tutorial provided by Microsoft, which can be found 
 The tutorial provides a step-by-step guide on how to sign in users and acquire tokens for calling Microsoft Graph in a Node.js & Express web app using the Microsoft Authentication Library (MSAL) for Node.
 
 This implementation aims to provide similar functionality, but for Deno environments.
+
+TODO: Plugin for msal auth routes
