@@ -87,7 +87,7 @@ MSAL_TENANT_ID=replace_with_your_azure_tenant_id
 
 You can use a different `MSAL_CLOUD_INSTANCE` url if you need to, and make sure to update the `MSAL_POST_LOGOUT_REDIRECT_URI` and `MSAL_REDIRECT_URI` with appropriate values for your application.
 
-In order to setup your new client, you will need to follow the documentation [here](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app).
+In order to setup your new MSAL client application, you will need to follow the documentation [here](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app).
 
 Finally, you will need to update your fresh config to leverage the plugin:
 
