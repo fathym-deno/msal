@@ -17,7 +17,11 @@ To get started with MSAL for Deno, you need to add the following to your `deno.j
 ```json
 {
   "imports": {
-    "@fathym/msal": "https://deno.land/x/msal@${VERSION}/mod.ts"
+    "@fathym/msal": "https://deno.land/x/msal@${VERSION}/mod.ts",
+    "$fresh/session": "https://deno.land/x/fresh_session@${VERSION}/mod.ts",
+    "preact": "https://esm.sh/preact@${VERSION}",
+    "preact/": "https://esm.sh/preact@${VERSION}/",
+    "preact-render-to-string": "https://esm.sh/*preact-render-to-string@${VERSION}"
   }
 }
 ```
