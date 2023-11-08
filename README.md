@@ -9,3 +9,5 @@ The tutorial provides a step-by-step guide on how to sign in users and acquire t
 This implementation aims to provide similar functionality, but for Deno environments.
 
 TODO: Plugin for msal auth routes
+
+TODO: Docs on setting up the msal config
