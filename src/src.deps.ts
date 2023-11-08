@@ -4,3 +4,5 @@ export * from "$fresh/server.ts";
 export * from "$fresh/session";
 export * as msal from "npm:@azure/msal-node@2.1.0";
 export * from "npm:@azure/msal-node@2.1.0";
+export * from "npm:@azure/identity";
+export * as ArmResource from "npm:@azure/arm-subscriptions";
