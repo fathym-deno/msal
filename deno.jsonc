@@ -10,11 +10,19 @@
   },
   "imports": {
     "$dnt": "https://deno.land/x/dnt/mod.ts",
-    "$std/": "https://deno.land/std@0.195.0/"
+    "$std/": "https://deno.land/std@0.204.0/",
+    "$fresh/session": "https://deno.land/x/fresh_session@0.2.2/mod.ts",
   },
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "preact"
+    "jsxImportSource": "preact",
+    "lib": [
+      "deno.unstable",
+      "deno.ns",
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable"
+    ]
   },
   "lock": false,
   "fmt": {
