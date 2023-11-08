@@ -20,21 +20,21 @@ export function buildIsConnectedCheckMiddleware<
     _req: Request,
     ctx: MiddlewareHandlerContext<TContextState>,
   ): Promise<Response> => {
-    const subClient = new ArmResource.SubscriptionClient({
-      getToken: async () => {
-        const token = await config.MSALAuthProvider.GetAccessToken(
-          ctx.state.session,
-        );
-
-        return {
-          token,
-        } as AccessToken;
-      },
-    });
-
-    const subsList = subClient.subscriptions.list();
-
     try {
+      const subClient = new ArmResource.SubscriptionClient({
+        getToken: async () => {
+          const token = await config.MSALAuthProvider.GetAccessToken(
+            ctx.state.session,
+          );
+
+          return {
+            token,
+          } as AccessToken;
+        },
+      });
+
+      const subsList = subClient.subscriptions.list();
+
       for await (const _sub of subsList) {
         break;
       }
