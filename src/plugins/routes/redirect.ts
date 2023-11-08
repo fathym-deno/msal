@@ -3,7 +3,7 @@ import { MSALPluginConfiguration } from "../MSALPluginConfiguration.ts";
 
 export function establishMsalRedirectRoute(config: MSALPluginConfiguration) {
   const handler: Handlers<JSX.Element, WithSession> = {
-    async GET(req, ctx) {
+    async POST(req, ctx) {
       const authReq = await req.formData();
 
       const code = authReq.get("code");

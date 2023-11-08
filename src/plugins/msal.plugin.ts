@@ -5,7 +5,7 @@ import { establishMsalRedirectRoute } from "./routes/redirect.ts";
 import { establishMsalSignInRoute } from "./routes/signin.ts";
 import { establishMsalSignOutRoute } from "./routes/signout.ts";
 
-export function msallugin(
+export function msalPlugin(
   config: MSALPluginConfiguration,
 ): Plugin {
   const msalSignInRoute = establishMsalSignInRoute(config);
