@@ -1,0 +1,51 @@
+{
+  "tasks": {
+    "build": "deno task build:fmt && deno task build:lint && deno task test",
+    "build:fmt": "deno fmt",
+    "build:lint": "deno lint",
+    "deploy": "deno task build && ftm git",
+    "npm:build": "deno run -A scripts/npm.build.ts",
+    "npm:publish": "npm publish ./build --access public",
+    "test": "deno test -A ./tests/tests.ts --coverage=cov"
+  },
+  "imports": {
+    "$dnt": "https://deno.land/x/dnt/mod.ts",
+    "preact": "https://esm.sh/preact@10.19.2",
+    "preact/": "https://esm.sh/preact@10.19.2/",
+    "preact-render-to-string": "https://esm.sh/*preact-render-to-string@6.3.1",
+    "$fresh/": "https://deno.land/x/fresh@1.6.1/",
+    "$fresh/session": "https://deno.land/x/fresh_session@0.2.2/mod.ts",
+    "$std/": "https://deno.land/std@0.211.0/"
+  },
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "lib": [
+      "deno.unstable",
+      "deno.ns",
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable"
+    ]
+  },
+  "lock": false,
+  "fmt": {
+    "include": [
+      "./**/*.ts",
+      "./**/*.tsx"
+    ],
+    "exclude": [],
+    "options": {}
+  },
+  "lint": {
+    "include": [
+      "./**/*.ts",
+      "./**/*.tsx"
+    ],
+    "exclude": [],
+    "rules": {
+      "include": [],
+      "exclude": []
+    }
+  }
+}
