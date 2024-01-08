@@ -1,4 +1,4 @@
-import { Handlers, JSX, respond, WithSession } from "../../src.deps.ts";
+import { Handlers, JSX, WithSession } from "../../src.deps.ts";
 import { MSALPluginConfiguration } from "../MSALPluginConfiguration.ts";
 
 export function establishMsalRedirectRoute(config: MSALPluginConfiguration) {
