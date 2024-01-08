@@ -118,13 +118,17 @@ export class MSALAuthProvider {
     try {
       const msalInstance = this.getMsalInstance();
 
-      const tokenCache = (
-        await this.denoKv.get([
-          "UserData",
-          session.get("idToken"),
-          "TokenCache",
-        ])
-      ).value as string;
+      const idToken = session.get("idToken");
+
+      const tokenCache = idToken
+        ? (
+          await this.denoKv.get([
+            "UserData",
+            idToken,
+            "TokenCache",
+          ])
+        ).value as string
+        : undefined;
 
       if (tokenCache) {
         msalInstance.getTokenCache().deserialize(tokenCache);
@@ -331,7 +335,7 @@ export class MSALAuthProvider {
      */
     const authCodeUrlRequest = {
       ...authCodeUrlRequestParams,
-      responseMode: msal.ResponseMode.FORM_POST,
+      // responseMode: msal.ResponseMode.FORM_POST,
       codeChallenge: pkceCodes.challenge,
       codeChallengeMethod: pkceCodes.challengeMethod,
     };

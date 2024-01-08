@@ -1,20 +1,20 @@
-import { Handlers, JSX, WithSession } from "../../src.deps.ts";
+import { Handlers, JSX, respond, WithSession } from "../../src.deps.ts";
 import { MSALPluginConfiguration } from "../MSALPluginConfiguration.ts";
 
 export function establishMsalRedirectRoute(config: MSALPluginConfiguration) {
   const handler: Handlers<JSX.Element, WithSession> = {
-    async POST(req, ctx) {
-      const authReq = await req.formData();
+    async GET(req, ctx) {
+      const url = new URL(req.url);
 
-      const code = authReq.get("code");
+      const code = url.searchParams.get("code")!;
 
-      const state = authReq.get("state");
+      const state = url.searchParams.get("state")!;
 
       const response = await config.MSALAuthProvider.HandleRedirect(
         ctx.state.session || {},
         {
-          code: code!.toString(),
-          state: state!.toString(),
+          code: code.toString(),
+          state: state.toString(),
         },
       );
 
