@@ -1,0 +1,11 @@
+{
+  "scriptId": "297",
+  "url": "file:///C:/Users/micha_8ygdgy8/Fathym/OpenSource/fathym-deno/msal/tests/test.deps.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [{ "startOffset": 0, "endOffset": 139, "count": 1 }],
+      "isBlockCoverage": true
+    }
+  ]
+}

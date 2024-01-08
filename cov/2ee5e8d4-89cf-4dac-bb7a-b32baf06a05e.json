@@ -1,0 +1,16 @@
+{
+  "scriptId": "300",
+  "url": "file:///C:/Users/micha_8ygdgy8/Fathym/OpenSource/fathym-deno/msal/src/utils.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [{ "startOffset": 0, "endOffset": 64, "count": 1 }],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "add",
+      "ranges": [{ "startOffset": 7, "endOffset": 63, "count": 1 }],
+      "isBlockCoverage": true
+    }
+  ]
+}

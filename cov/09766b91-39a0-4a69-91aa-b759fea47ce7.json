@@ -1,0 +1,16 @@
+{
+  "scriptId": "323",
+  "url": "https://deno.land/std@0.195.0/assert/assertion_error.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [{ "startOffset": 0, "endOffset": 196, "count": 1 }],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [{ "startOffset": 117, "endOffset": 195, "count": 0 }],
+      "isBlockCoverage": true
+    }
+  ]
+}

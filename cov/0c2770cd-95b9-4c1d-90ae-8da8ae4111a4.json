@@ -1,0 +1,16 @@
+{
+  "scriptId": "326",
+  "url": "https://deno.land/std@0.195.0/assert/unimplemented.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [{ "startOffset": 0, "endOffset": 336, "count": 1 }],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "unimplemented",
+      "ranges": [{ "startOffset": 203, "endOffset": 335, "count": 0 }],
+      "isBlockCoverage": false
+    }
+  ]
+}

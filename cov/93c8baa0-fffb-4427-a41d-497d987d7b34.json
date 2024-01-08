@@ -1,0 +1,16 @@
+{
+  "scriptId": "312",
+  "url": "https://deno.land/std@0.195.0/assert/assert_not_instance_of.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [{ "startOffset": 0, "endOffset": 510, "count": 1 }],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "assertNotInstanceOf",
+      "ranges": [{ "startOffset": 223, "endOffset": 509, "count": 0 }],
+      "isBlockCoverage": false
+    }
+  ]
+}
