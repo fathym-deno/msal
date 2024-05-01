@@ -1,9 +1,13 @@
-import { Handlers, JSX, WithSession } from "../../src.deps.ts";
+import { EaCRuntimeHandlers } from "../../src.deps.ts";
 import { MSALPluginConfiguration } from "../MSALPluginConfiguration.ts";
+import { MSALSessionDataLoader } from "../MSALSessionDataLoader.ts";
 
-export function establishMsalRedirectRoute(config: MSALPluginConfiguration) {
-  const handler: Handlers<JSX.Element, WithSession> = {
-    async GET(req, ctx) {
+export function establishMsalRedirectRoute(
+  config: MSALPluginConfiguration,
+  sessionDataLoader: MSALSessionDataLoader,
+) {
+  const handler: EaCRuntimeHandlers = {
+    async GET(req, _ctx) {
       const url = new URL(req.url);
 
       const code = url.searchParams.get("code")!;
@@ -11,7 +15,7 @@ export function establishMsalRedirectRoute(config: MSALPluginConfiguration) {
       const state = url.searchParams.get("state")!;
 
       const response = await config.MSALAuthProvider.HandleRedirect(
-        ctx.state.session || {},
+        sessionDataLoader,
         {
           code: code.toString(),
           state: state.toString(),
@@ -22,5 +26,5 @@ export function establishMsalRedirectRoute(config: MSALPluginConfiguration) {
     },
   };
 
-  return { handler, component: undefined };
+  return handler;
 }

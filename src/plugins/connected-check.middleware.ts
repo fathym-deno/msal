@@ -3,28 +3,26 @@ import { MSALPluginConfiguration } from "./MSALPluginConfiguration.ts";
 import {
   AccessToken,
   ArmResource,
-  MiddlewareHandlerContext,
-  WithSession,
+  EaCRuntimeContext,
+  EaCRuntimeHandler,
 } from "../src.deps.ts";
+import { WithSession } from "./WithSession.ts";
 
 export function buildIsConnectedCheckMiddleware<
   TContextState extends WithSession,
 >(
   config: MSALPluginConfiguration,
   badRequestHandler?: (
-    ctx: MiddlewareHandlerContext<TContextState>,
+    ctx: EaCRuntimeContext<TContextState>,
     err: any,
   ) => Promise<void | Response>,
-) {
-  return async (
-    _req: Request,
-    ctx: MiddlewareHandlerContext<TContextState>,
-  ): Promise<Response> => {
+): EaCRuntimeHandler<TContextState> {
+  return async (_req: Request, ctx): Promise<Response> => {
     try {
       const subClient = new ArmResource.SubscriptionClient({
         getToken: async () => {
           const token = await config.MSALAuthProvider.GetAccessToken(
-            ctx.state.session,
+            ctx.State.Session!,
           );
 
           return {
@@ -48,6 +46,6 @@ export function buildIsConnectedCheckMiddleware<
       }
     }
 
-    return await ctx.next();
+    return await ctx.Next();
   };
 }

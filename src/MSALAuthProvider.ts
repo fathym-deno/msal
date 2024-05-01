@@ -10,7 +10,7 @@ import {
 import { MSALAcquireTokenOptions } from "./MSALAcquireTokenOptions.ts";
 import { MSALSignInOptions } from "./MSALSignInOptions.ts";
 import { MSALSignOutOptions } from "./MSALSignOutOptions.ts";
-import { MSALAuthSession } from "./MSALAuthSession.ts";
+import { MSALSessionDataLoader } from "./plugins/MSALSessionDataLoader.ts";
 
 // From: https://learn.microsoft.com/en-us/entra/identity-platform/tutorial-v2-nodejs-webapp-msal
 
@@ -25,11 +25,13 @@ export class MSALAuthProvider {
 
   //#region API Methods
   public async AcquireToken(
-    session: MSALAuthSession,
+    sessionDataLoader: MSALSessionDataLoader,
     options: MSALAcquireTokenOptions,
   ): Promise<Response> {
     try {
       const msalInstance = this.getMsalInstance();
+
+      let idToken = sessionDataLoader.Load("idToken") as string;
 
       /**
        * If a token cache exists in the session, deserialize it and set it as the
@@ -37,11 +39,7 @@ export class MSALAuthProvider {
        * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-node/docs/caching.md
        */
       const tokenCache = (
-        await this.denoKv.get([
-          "UserData",
-          session.get("idToken"),
-          "TokenCache",
-        ])
+        await this.denoKv.get(["MSAL", "UserData", idToken, "TokenCache"])
       ).value as string;
 
       if (tokenCache) {
@@ -50,84 +48,78 @@ export class MSALAuthProvider {
 
       const tokenResponse = await msalInstance.acquireTokenSilent({
         account: (
-          await this.denoKv.get([
-            "UserData",
-            session.get("idToken"),
-            "AccessToken",
-          ])
+          await this.denoKv.get(["MSAL", "UserData", idToken, "AccessToken"])
         ).value as AccountInfo,
         scopes: options.Scopes || [],
       });
 
-      session.set("idToken", tokenResponse.idToken);
+      idToken = tokenResponse.idToken;
+
+      sessionDataLoader.Set("idToken", idToken);
 
       /**
        * On successful token acquisition, write the updated token
        * cache back to the session. For more, see:
        * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-node/docs/caching.md
        */
-      await this.denoKv.set(
-        ["UserData", session.get("idToken"), "TokenCache"],
-        msalInstance.getTokenCache().serialize(),
-      );
-
-      await this.denoKv.set(
-        ["UserData", session.get("idToken"), "Account"],
-        tokenResponse.account,
-      );
-
-      await this.denoKv.set(
-        ["UserData", session.get("idToken"), "AccessToken"],
-        tokenResponse.accessToken,
-      );
-
-      // session.set('accessToken', tokenResponse.accessToken);
-
-      // session.set('account', tokenResponse.account);
+      await this.denoKv
+        .atomic()
+        .set(
+          ["MSAL", "UserData", idToken, "TokenCache"],
+          msalInstance.getTokenCache().serialize(),
+        )
+        .set(["MSAL", "UserData", idToken, "Account"], tokenResponse.account)
+        .set(
+          ["MSAL", "UserData", idToken, "AccessToken"],
+          tokenResponse.accessToken,
+        )
+        .commit();
 
       return redirectRequest(options.SuccessRedirect);
     } catch (error) {
       if (error instanceof msal.InteractionRequiredAuthError) {
-        return await this.SignIn(session, options);
+        return await this.SignIn(sessionDataLoader, options);
       }
 
       throw error;
     }
   }
 
-  public async GetAccessToken(session: MSALAuthSession): Promise<string> {
+  public async GetAccessToken(
+    sessionDataLoader: MSALSessionDataLoader,
+  ): Promise<string> {
     return (
-      await this.denoKv.get(["UserData", session.get("idToken"), "AccessToken"])
+      await this.denoKv.get([
+        "MSAL",
+        "UserData",
+        sessionDataLoader.Load("idToken"),
+        "AccessToken",
+      ])
     ).value as string;
   }
 
   public async HandleRedirect(
-    session: MSALAuthSession,
+    sessionDataLoader: MSALSessionDataLoader,
     payload: AuthorizationCodePayload,
   ): Promise<Response> {
     if (!payload || !payload.state) {
-      throw new Error("Error: response not found");
+      throw new Error("Error: respsonse not found");
     }
 
     const authCodeRequest = {
-      ...session.get("authCodeRequest"),
+      ...sessionDataLoader.Load("authCodeRequest"),
       code: payload.code,
-      codeVerifier: session.get("pkceCodes").verifier,
+      codeVerifier: sessionDataLoader.Load("pkceCodes").verifier,
     };
 
     try {
       const msalInstance = this.getMsalInstance();
 
-      const idToken = session.get("idToken");
+      let idToken = sessionDataLoader.Load("idToken") as string;
 
       const tokenCache = idToken
-        ? (
-          await this.denoKv.get([
-            "UserData",
-            idToken,
-            "TokenCache",
-          ])
-        ).value as string
+        ? ((await this.denoKv.get(["MSAL", "UserData", idToken, "TokenCache"]))
+          .value as string)
         : undefined;
 
       if (tokenCache) {
@@ -139,30 +131,22 @@ export class MSALAuthProvider {
         payload,
       );
 
-      session.set("test", new Date().toString());
+      idToken = tokenResponse.idToken;
 
-      session.set("idToken", tokenResponse.idToken);
+      sessionDataLoader.Set("idToken", idToken);
 
-      await this.denoKv.set(
-        ["UserData", session.get("idToken"), "TokenCache"],
-        msalInstance.getTokenCache().serialize(),
-      );
-
-      await this.denoKv.set(
-        ["UserData", session.get("idToken"), "Account"],
-        tokenResponse.account,
-      );
-
-      await this.denoKv.set(
-        ["UserData", session.get("idToken"), "AccessToken"],
-        tokenResponse.accessToken,
-      );
-
-      // session.set("tokenCache", msalInstance.getTokenCache().serialize());
-
-      // session.set("account", tokenResponse.account);
-
-      session.set("isMsalAuthenticated", true);
+      await this.denoKv
+        .atomic()
+        .set(
+          ["MSAL", "UserData", idToken, "TokenCache"],
+          msalInstance.getTokenCache().serialize(),
+        )
+        .set(["MSAL", "UserData", idToken, "Account"], tokenResponse.account)
+        .set(
+          ["MSAL", "UserData", idToken, "AccessToken"],
+          tokenResponse.accessToken,
+        )
+        .commit();
 
       const state = JSON.parse(this.cryptoProvider.base64Decode(payload.state));
 
@@ -173,7 +157,7 @@ export class MSALAuthProvider {
   }
 
   public async SignIn(
-    session: MSALAuthSession,
+    sessionDataLoader: MSALSessionDataLoader,
     options: MSALSignInOptions,
   ): Promise<Response> {
     /**
@@ -238,7 +222,7 @@ export class MSALAuthProvider {
 
     // trigger the first leg of auth code flow
     return await this.redirectToAuthCodeUrl(
-      session,
+      sessionDataLoader,
       authCodeUrlRequestParams,
       authCodeRequestParams,
       msalInstance,
@@ -246,7 +230,7 @@ export class MSALAuthProvider {
   }
 
   public async SignOut(
-    session: MSALAuthSession,
+    sessionDataLoader: MSALSessionDataLoader,
     options: MSALSignOutOptions,
   ): Promise<Response> {
     /**
@@ -261,9 +245,13 @@ export class MSALAuthProvider {
         `logout?post_logout_redirect_uri=${options.PostLogoutRedirectUri}`;
     }
 
-    session.clear();
+    sessionDataLoader.Clear();
 
-    await this.denoKv.delete(["UserData", session.get("idToken")]);
+    await this.denoKv.delete([
+      "MSAL",
+      "UserData",
+      sessionDataLoader.Load("idToken"),
+    ]);
 
     return redirectRequest(logoutUri);
   }
@@ -309,7 +297,7 @@ export class MSALAuthProvider {
   }
 
   protected async redirectToAuthCodeUrl(
-    session: MSALAuthSession,
+    sessionDataLoader: MSALSessionDataLoader,
     authCodeUrlRequestParams: AuthorizationUrlRequest,
     authCodeRequestParams: AuthorizationCodeRequest,
     msalInstance: msal.ConfidentialClientApplication,
@@ -325,7 +313,7 @@ export class MSALAuthProvider {
       challenge: challenge,
     };
 
-    session.set("pkceCodes", pkceCodes);
+    sessionDataLoader.Set("pkceCodes", pkceCodes);
 
     /**
      * By manipulating the request objects below before each request, we can obtain
@@ -340,9 +328,9 @@ export class MSALAuthProvider {
       codeChallengeMethod: pkceCodes.challengeMethod,
     };
 
-    session.set("authCodeUrlRequest", authCodeUrlRequest);
+    sessionDataLoader.Set("authCodeUrlRequest", authCodeUrlRequest);
 
-    session.set("authCodeRequest", {
+    sessionDataLoader.Set("authCodeRequest", {
       ...authCodeRequestParams,
       code: "",
     });

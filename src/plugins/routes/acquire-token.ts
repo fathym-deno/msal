@@ -1,17 +1,19 @@
-import { Handlers, JSX, WithSession } from "../../src.deps.ts";
+import { EaCRuntimeHandlers } from "../../src.deps.ts";
+import { MSALSessionDataLoader } from "../MSALSessionDataLoader.ts";
 import { MSALPluginConfiguration } from "../MSALPluginConfiguration.ts";
 
 export function establishMsalAcquireTokenRoute(
   config: MSALPluginConfiguration,
+  sessionDataLoader: MSALSessionDataLoader,
 ) {
-  const handler: Handlers<JSX.Element, WithSession> = {
-    GET(_req, ctx) {
+  const handler: EaCRuntimeHandlers = {
+    GET(_req, _ctx) {
       return config.MSALAuthProvider.AcquireToken(
-        ctx.state.session,
+        sessionDataLoader,
         config.MSALSignInOptions,
       );
     },
   };
 
-  return { handler, component: undefined };
+  return handler;
 }

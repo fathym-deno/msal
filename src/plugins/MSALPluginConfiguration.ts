@@ -8,6 +8,4 @@ export type MSALPluginConfiguration = {
   MSALSignInOptions: MSALSignInOptions;
 
   MSALSignOutOptions: MSALSignOutOptions;
-
-  RootPath?: string;
 };

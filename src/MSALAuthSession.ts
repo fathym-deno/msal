@@ -1,7 +1,5 @@
-import { Session } from "./src.deps.ts";
-
-export type MSALAuthSession = Session;
-//  {
+// // deno-lint-ignore-file no-explicit-any
+// export type MSALAuthSession = {
 //   clear(): any;
 
 //   get(key: string): any;

@@ -1,15 +1,19 @@
-import { Handlers, JSX, WithSession } from "../../src.deps.ts";
+import { EaCRuntimeHandlers } from "../../src.deps.ts";
 import { MSALPluginConfiguration } from "../MSALPluginConfiguration.ts";
+import { MSALSessionDataLoader } from "../MSALSessionDataLoader.ts";
 
-export function establishMsalSignOutRoute(config: MSALPluginConfiguration) {
-  const handler: Handlers<JSX.Element, WithSession> = {
-    GET(_req, ctx) {
+export function establishMsalSignOutRoute(
+  config: MSALPluginConfiguration,
+  sessionDataLoader: MSALSessionDataLoader,
+) {
+  const handler: EaCRuntimeHandlers = {
+    GET(_req, _ctx) {
       return config.MSALAuthProvider.SignOut(
-        ctx.state.session,
+        sessionDataLoader,
         config.MSALSignOutOptions,
       );
     },
   };
 
-  return { handler, component: undefined };
+  return handler;
 }
