@@ -13,7 +13,6 @@ import { MSALSignOutOptions } from "./MSALSignOutOptions.ts";
 import { MSALSessionDataLoader } from "./plugins/MSALSessionDataLoader.ts";
 
 // From: https://learn.microsoft.com/en-us/entra/identity-platform/tutorial-v2-nodejs-webapp-msal
-
 // TODO: encrypt/decrypt keys... use crypto.subtle.*
 
 export class MSALAuthProvider {
@@ -25,13 +24,14 @@ export class MSALAuthProvider {
 
   //#region API Methods
   public async AcquireToken(
+    req: Request,
     sessionDataLoader: MSALSessionDataLoader,
     options: MSALAcquireTokenOptions,
   ): Promise<Response> {
     try {
       const msalInstance = this.getMsalInstance();
 
-      let idToken = sessionDataLoader.Load("idToken") as string;
+      let idToken = (await sessionDataLoader.Load(req, "idToken")) as string;
 
       /**
        * If a token cache exists in the session, deserialize it and set it as the
@@ -55,7 +55,13 @@ export class MSALAuthProvider {
 
       idToken = tokenResponse.idToken;
 
-      sessionDataLoader.Set("idToken", idToken);
+      await sessionDataLoader.Set(req, "idToken", idToken);
+
+      await sessionDataLoader.Set(
+        req,
+        "accessToken",
+        tokenResponse.accessToken,
+      );
 
       /**
        * On successful token acquisition, write the updated token
@@ -67,18 +73,26 @@ export class MSALAuthProvider {
         .set(
           ["MSAL", "UserData", idToken, "TokenCache"],
           msalInstance.getTokenCache().serialize(),
+          {
+            expireIn: 1000 * 60 * 30,
+          },
         )
-        .set(["MSAL", "UserData", idToken, "Account"], tokenResponse.account)
+        .set(["MSAL", "UserData", idToken, "Account"], tokenResponse.account, {
+          expireIn: 1000 * 60 * 30,
+        })
         .set(
           ["MSAL", "UserData", idToken, "AccessToken"],
           tokenResponse.accessToken,
+          {
+            expireIn: 1000 * 60 * 30,
+          },
         )
         .commit();
 
-      return redirectRequest(options.SuccessRedirect);
+      return redirectRequest(options.SuccessRedirect, false, false);
     } catch (error) {
       if (error instanceof msal.InteractionRequiredAuthError) {
-        return await this.SignIn(sessionDataLoader, options);
+        return await this.SignIn(req, sessionDataLoader, options);
       }
 
       throw error;
@@ -86,19 +100,21 @@ export class MSALAuthProvider {
   }
 
   public async GetAccessToken(
+    req: Request,
     sessionDataLoader: MSALSessionDataLoader,
   ): Promise<string> {
     return (
       await this.denoKv.get([
         "MSAL",
         "UserData",
-        sessionDataLoader.Load("idToken"),
+        await sessionDataLoader.Load(req, "idToken"),
         "AccessToken",
       ])
     ).value as string;
   }
 
-  public async HandleRedirect(
+  public async HandleCallback(
+    req: Request,
     sessionDataLoader: MSALSessionDataLoader,
     payload: AuthorizationCodePayload,
   ): Promise<Response> {
@@ -107,15 +123,15 @@ export class MSALAuthProvider {
     }
 
     const authCodeRequest = {
-      ...sessionDataLoader.Load("authCodeRequest"),
+      ...(await sessionDataLoader.Load(req, "authCodeRequest")),
       code: payload.code,
-      codeVerifier: sessionDataLoader.Load("pkceCodes").verifier,
+      codeVerifier: (await sessionDataLoader.Load(req, "pkceCodes")).verifier,
     };
 
     try {
       const msalInstance = this.getMsalInstance();
 
-      let idToken = sessionDataLoader.Load("idToken") as string;
+      let idToken = (await sessionDataLoader.Load(req, "idToken")) as string;
 
       const tokenCache = idToken
         ? ((await this.denoKv.get(["MSAL", "UserData", idToken, "TokenCache"]))
@@ -133,30 +149,45 @@ export class MSALAuthProvider {
 
       idToken = tokenResponse.idToken;
 
-      sessionDataLoader.Set("idToken", idToken);
+      await sessionDataLoader.Set(req, "idToken", idToken);
+
+      await sessionDataLoader.Set(
+        req,
+        "AccessToken",
+        tokenResponse.accessToken,
+      );
 
       await this.denoKv
         .atomic()
         .set(
           ["MSAL", "UserData", idToken, "TokenCache"],
           msalInstance.getTokenCache().serialize(),
+          {
+            expireIn: 1000 * 60 * 30,
+          },
         )
-        .set(["MSAL", "UserData", idToken, "Account"], tokenResponse.account)
+        .set(["MSAL", "UserData", idToken, "Account"], tokenResponse.account, {
+          expireIn: 1000 * 60 * 30,
+        })
         .set(
           ["MSAL", "UserData", idToken, "AccessToken"],
           tokenResponse.accessToken,
+          {
+            expireIn: 1000 * 60 * 30,
+          },
         )
         .commit();
 
       const state = JSON.parse(this.cryptoProvider.base64Decode(payload.state));
 
-      return redirectRequest(state.successRedirect);
+      return redirectRequest(state.successRedirect, false, false);
     } catch (error) {
       throw error;
     }
   }
 
   public async SignIn(
+    req: Request,
     sessionDataLoader: MSALSessionDataLoader,
     options: MSALSignInOptions,
   ): Promise<Response> {
@@ -222,6 +253,7 @@ export class MSALAuthProvider {
 
     // trigger the first leg of auth code flow
     return await this.redirectToAuthCodeUrl(
+      req,
       sessionDataLoader,
       authCodeUrlRequestParams,
       authCodeRequestParams,
@@ -230,6 +262,7 @@ export class MSALAuthProvider {
   }
 
   public async SignOut(
+    req: Request,
     sessionDataLoader: MSALSessionDataLoader,
     options: MSALSignOutOptions,
   ): Promise<Response> {
@@ -245,18 +278,17 @@ export class MSALAuthProvider {
         `logout?post_logout_redirect_uri=${options.PostLogoutRedirectUri}`;
     }
 
-    sessionDataLoader.Clear();
-
     await this.denoKv.delete([
       "MSAL",
       "UserData",
-      sessionDataLoader.Load("idToken"),
+      await sessionDataLoader.Load(req, "idToken"),
     ]);
 
-    return redirectRequest(logoutUri);
+    await sessionDataLoader.Clear(req);
+
+    return redirectRequest(logoutUri, false, false);
   }
   //#endregion
-
   //#region Helpers
   protected async getAuthorityMetadata() {
     const endpoint =
@@ -297,6 +329,7 @@ export class MSALAuthProvider {
   }
 
   protected async redirectToAuthCodeUrl(
+    req: Request,
     sessionDataLoader: MSALSessionDataLoader,
     authCodeUrlRequestParams: AuthorizationUrlRequest,
     authCodeRequestParams: AuthorizationCodeRequest,
@@ -313,7 +346,7 @@ export class MSALAuthProvider {
       challenge: challenge,
     };
 
-    sessionDataLoader.Set("pkceCodes", pkceCodes);
+    await sessionDataLoader.Set(req, "pkceCodes", pkceCodes);
 
     /**
      * By manipulating the request objects below before each request, we can obtain
@@ -328,9 +361,9 @@ export class MSALAuthProvider {
       codeChallengeMethod: pkceCodes.challengeMethod,
     };
 
-    sessionDataLoader.Set("authCodeUrlRequest", authCodeUrlRequest);
+    await sessionDataLoader.Set(req, "authCodeUrlRequest", authCodeUrlRequest);
 
-    sessionDataLoader.Set("authCodeRequest", {
+    await sessionDataLoader.Set(req, "authCodeRequest", {
       ...authCodeRequestParams,
       code: "",
     });
@@ -340,10 +373,9 @@ export class MSALAuthProvider {
         authCodeUrlRequest,
       );
 
-      return redirectRequest(authCodeUrlResponse);
+      return redirectRequest(authCodeUrlResponse, false, false);
     } catch (error) {
       throw error;
     }
   }
-  //#endregion
 }

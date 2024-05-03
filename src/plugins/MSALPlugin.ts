@@ -5,10 +5,12 @@ import {
   IoCContainer,
 } from "../src.deps.ts";
 import { EaCMSALProcessorHandlerResolver } from "./EaCMSALProcessorHandlerResolver.ts";
-import { MSALSessionDataLoader } from "./MSALSessionDataLoader.ts";
+import { MSALSessionDataLoaderResolver } from "./MSALSessionDataLoaderResolver.ts";
 
 export default class MSALPlugin implements EaCRuntimePlugin {
-  constructor(protected sessionDataLoader: MSALSessionDataLoader) {}
+  constructor(
+    protected sessionDataLoaderResolver: MSALSessionDataLoaderResolver,
+  ) {}
 
   public Build(_config: EaCRuntimeConfig): Promise<EaCRuntimePluginConfig> {
     const pluginConfig: EaCRuntimePluginConfig = {
@@ -21,8 +23,8 @@ export default class MSALPlugin implements EaCRuntimePlugin {
       Type: pluginConfig.IoC!.Symbol("ProcessorHandlerResolver"),
     });
 
-    pluginConfig.IoC!.Register(() => this.sessionDataLoader, {
-      Type: pluginConfig.IoC!.Symbol("MSALSessionDataLoader"),
+    pluginConfig.IoC!.Register(() => this.sessionDataLoaderResolver, {
+      Type: pluginConfig.IoC!.Symbol("MSALSessionDataLoaderResolver"),
     });
 
     return Promise.resolve(pluginConfig);

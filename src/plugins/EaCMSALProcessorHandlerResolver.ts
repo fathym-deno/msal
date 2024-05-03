@@ -11,9 +11,9 @@ import {
   ProcessorHandlerResolver,
 } from "../src.deps.ts";
 import { MSALPluginConfiguration } from "./MSALPluginConfiguration.ts";
-import { MSALSessionDataLoader } from "./MSALSessionDataLoader.ts";
+import { MSALSessionDataLoaderResolver } from "./MSALSessionDataLoaderResolver.ts";
 import { establishMsalAcquireTokenRoute } from "./routes/acquire-token.ts";
-import { establishMsalRedirectRoute } from "./routes/redirect.ts";
+import { establishMsalCallbackRoute } from "./routes/callback.ts";
 import { establishMsalSignInRoute } from "./routes/signin.ts";
 import { establishMsalSignOutRoute } from "./routes/signout.ts";
 
@@ -45,8 +45,8 @@ export const EaCMSALProcessorHandlerResolver: ProcessorHandlerResolver = {
       },
       system: {
         loggerOptions: {
-          loggerCallback(_loglevel, message, _containsPii) {
-            console.log(message);
+          loggerCallback(_loglevel, _message, _containsPii) {
+            // console.log(message);
           },
           piiLoggingEnabled: false,
           logLevel: 3,
@@ -63,8 +63,16 @@ export const EaCMSALProcessorHandlerResolver: ProcessorHandlerResolver = {
       ),
     };
 
-    const sessionDataLoader = await ioc.Resolve<MSALSessionDataLoader>(
-      ioc.Symbol("MSALSessionDataLoader"),
+    const sessionDataLoaderResolver = await ioc.Resolve<
+      MSALSessionDataLoaderResolver
+    >(
+      ioc.Symbol("MSALSessionDataLoaderResolver"),
+    );
+
+    const sessionDataLoader = await sessionDataLoaderResolver.Resolve(
+      ioc,
+      processor,
+      eac,
     );
 
     const msalSignInRoute = establishMsalSignInRoute(
@@ -77,7 +85,7 @@ export const EaCMSALProcessorHandlerResolver: ProcessorHandlerResolver = {
       sessionDataLoader,
     );
 
-    const msalRedirectRoute = establishMsalRedirectRoute(
+    const msalRedirectRoute = establishMsalCallbackRoute(
       pluginConfig,
       sessionDataLoader,
     );
@@ -95,7 +103,7 @@ export const EaCMSALProcessorHandlerResolver: ProcessorHandlerResolver = {
           return msalSignInRoute.GET!(req, ctx);
         }
 
-        case "redirect": {
+        case "callback": {
           return msalRedirectRoute.GET!(req, ctx);
         }
 

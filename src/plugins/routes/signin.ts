@@ -7,11 +7,15 @@ export function establishMsalSignInRoute(
   sessionDataLoader: MSALSessionDataLoader,
 ) {
   const handler: EaCRuntimeHandlers = {
-    GET(_req, _ctx) {
-      return config.MSALAuthProvider.SignIn(
-        sessionDataLoader,
-        config.MSALSignInOptions,
-      );
+    GET(req, ctx) {
+      console.log(req.url.search);
+      return config.MSALAuthProvider.SignIn(req, sessionDataLoader, {
+        ...config.MSALSignInOptions,
+        RedirectURI: new URL("callback", ctx.Runtime.URLMatch.Base).href,
+        SuccessRedirect: new URLSearchParams(ctx.Runtime.URLMatch.Search).get(
+          "success_url",
+        )!,
+      });
     },
   };
 

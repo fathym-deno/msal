@@ -2,7 +2,7 @@ import { EaCRuntimeHandlers } from "../../src.deps.ts";
 import { MSALPluginConfiguration } from "../MSALPluginConfiguration.ts";
 import { MSALSessionDataLoader } from "../MSALSessionDataLoader.ts";
 
-export function establishMsalRedirectRoute(
+export function establishMsalCallbackRoute(
   config: MSALPluginConfiguration,
   sessionDataLoader: MSALSessionDataLoader,
 ) {
@@ -14,7 +14,8 @@ export function establishMsalRedirectRoute(
 
       const state = url.searchParams.get("state")!;
 
-      const response = await config.MSALAuthProvider.HandleRedirect(
+      const response = await config.MSALAuthProvider.HandleCallback(
+        req,
         sessionDataLoader,
         {
           code: code.toString(),

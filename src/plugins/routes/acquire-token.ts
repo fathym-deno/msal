@@ -7,8 +7,9 @@ export function establishMsalAcquireTokenRoute(
   sessionDataLoader: MSALSessionDataLoader,
 ) {
   const handler: EaCRuntimeHandlers = {
-    GET(_req, _ctx) {
+    GET(req, _ctx) {
       return config.MSALAuthProvider.AcquireToken(
+        req,
         sessionDataLoader,
         config.MSALSignInOptions,
       );

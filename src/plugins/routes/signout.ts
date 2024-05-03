@@ -7,8 +7,9 @@ export function establishMsalSignOutRoute(
   sessionDataLoader: MSALSessionDataLoader,
 ) {
   const handler: EaCRuntimeHandlers = {
-    GET(_req, _ctx) {
+    GET(req, _ctx) {
       return config.MSALAuthProvider.SignOut(
+        req,
         sessionDataLoader,
         config.MSALSignOutOptions,
       );

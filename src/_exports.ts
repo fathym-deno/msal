@@ -1,3 +1,4 @@
+export * from "./eac/_exports.ts";
 export * from "./plugins/_exports.ts";
 export * from "./MSALAcquireTokenOptions.ts";
 export * from "./MSALAuthProvider.ts";
