@@ -12,7 +12,7 @@ export default class MSALPlugin implements EaCRuntimePlugin {
     protected sessionDataLoaderResolver: MSALSessionDataLoaderResolver,
   ) {}
 
-  public Build(_config: EaCRuntimeConfig): Promise<EaCRuntimePluginConfig> {
+  public Setup(_config: EaCRuntimeConfig): Promise<EaCRuntimePluginConfig> {
     const pluginConfig: EaCRuntimePluginConfig = {
       Name: "MSALPlugin",
       IoC: new IoCContainer(),
