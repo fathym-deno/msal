@@ -6,23 +6,26 @@ import {
   EaCRuntimeContext,
   EaCRuntimeHandler,
 } from "../src.deps.ts";
-import { WithSession } from "./WithSession.ts";
+import { MSALSessionDataLoader } from "./MSALSessionDataLoader.ts";
+// import { WithSession } from "./WithSession.ts";
 
 export function buildIsConnectedCheckMiddleware<
-  TContextState extends WithSession,
+  TContextState, //extends WithSession
 >(
   config: MSALPluginConfiguration,
+  sessionDataLoader: MSALSessionDataLoader,
   badRequestHandler?: (
     ctx: EaCRuntimeContext<TContextState>,
     err: any,
   ) => Promise<void | Response>,
 ): EaCRuntimeHandler<TContextState> {
-  return async (_req: Request, ctx): Promise<Response> => {
+  return async (req: Request, ctx): Promise<Response> => {
     try {
       const subClient = new ArmResource.SubscriptionClient({
         getToken: async () => {
           const token = await config.MSALAuthProvider.GetAccessToken(
-            ctx.State.Session!,
+            req,
+            sessionDataLoader,
           );
 
           return {
