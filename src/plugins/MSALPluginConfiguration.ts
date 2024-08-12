@@ -1,6 +1,6 @@
-import { MSALAuthProvider } from "../MSALAuthProvider.ts";
-import { MSALSignInOptions } from "../MSALSignInOptions.ts";
-import { MSALSignOutOptions } from "../MSALSignOutOptions.ts";
+import type { MSALAuthProvider } from "../MSALAuthProvider.ts";
+import type { MSALSignInOptions } from "../MSALSignInOptions.ts";
+import type { MSALSignOutOptions } from "../MSALSignOutOptions.ts";
 
 export type MSALPluginConfiguration = {
   MSALAuthProvider: MSALAuthProvider;

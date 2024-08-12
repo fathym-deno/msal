@@ -1,6 +1,6 @@
-import { EaCMSALProcessor } from "../eac/EaCMSALProcessor.ts";
-import { EaCRuntimeEaC, IoCContainer } from "../src.deps.ts";
-import { MSALSessionDataLoader } from "./MSALSessionDataLoader.ts";
+import type { EaCMSALProcessor } from "../eac/EaCMSALProcessor.ts";
+import type { EaCRuntimeEaC, IoCContainer } from "../src.deps.ts";
+import type { MSALSessionDataLoader } from "./MSALSessionDataLoader.ts";
 
 export type MSALSessionDataLoaderResolver = {
   Resolve: (

@@ -1,16 +1,17 @@
+// deno-lint-ignore-file no-explicit-any
 import {
-  AccountInfo,
-  AuthorizationCodePayload,
-  AuthorizationCodeRequest,
-  AuthorizationUrlRequest,
-  Configuration,
+  type AccountInfo,
+  type AuthorizationCodePayload,
+  type AuthorizationCodeRequest,
+  type AuthorizationUrlRequest,
+  type Configuration,
   msal,
   redirectRequest,
 } from "./src.deps.ts";
-import { MSALAcquireTokenOptions } from "./MSALAcquireTokenOptions.ts";
-import { MSALSignInOptions } from "./MSALSignInOptions.ts";
-import { MSALSignOutOptions } from "./MSALSignOutOptions.ts";
-import { MSALSessionDataLoader } from "./plugins/MSALSessionDataLoader.ts";
+import type { MSALAcquireTokenOptions } from "./MSALAcquireTokenOptions.ts";
+import type { MSALSignInOptions } from "./MSALSignInOptions.ts";
+import type { MSALSignOutOptions } from "./MSALSignOutOptions.ts";
+import type { MSALSessionDataLoader } from "./plugins/MSALSessionDataLoader.ts";
 
 // From: https://learn.microsoft.com/en-us/entra/identity-platform/tutorial-v2-nodejs-webapp-msal
 // TODO: encrypt/decrypt keys... use crypto.subtle.*
@@ -291,7 +292,7 @@ export class MSALAuthProvider {
   //#endregion
 
   //#region Helpers
-  protected async getAuthorityMetadata() {
+  protected async getAuthorityMetadata(): Promise<any> {
     const endpoint =
       `${this.msalConfig.auth.authority}/v2.0/.well-known/openid-configuration`;
 
@@ -304,7 +305,7 @@ export class MSALAuthProvider {
     }
   }
 
-  protected async getCloudDiscoveryMetadata() {
+  protected async getCloudDiscoveryMetadata(): Promise<any> {
     const endpoint =
       `https://login.microsoftonline.com/common/discovery/instance?api-version=1.1&authorization_endpoint=${this.msalConfig.auth.authority}/oauth2/v2.0/authorize`;
 
@@ -325,7 +326,7 @@ export class MSALAuthProvider {
     }
   }
 
-  protected getMsalInstance() {
+  protected getMsalInstance(): msal.ConfidentialClientApplication {
     return new msal.ConfidentialClientApplication(this.msalConfig);
   }
 

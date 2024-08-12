@@ -1,12 +1,12 @@
 // deno-lint-ignore-file no-explicit-any
-import { MSALPluginConfiguration } from "./MSALPluginConfiguration.ts";
+import type { MSALPluginConfiguration } from "./MSALPluginConfiguration.ts";
 import {
-  AccessToken,
+  type AccessToken,
   ArmResource,
-  EaCRuntimeContext,
-  EaCRuntimeHandler,
+  type EaCRuntimeContext,
+  type EaCRuntimeHandler,
 } from "../src.deps.ts";
-import { MSALSessionDataLoader } from "./MSALSessionDataLoader.ts";
+import type { MSALSessionDataLoader } from "./MSALSessionDataLoader.ts";
 // import { WithSession } from "./WithSession.ts";
 
 export function buildIsConnectedCheckMiddleware<

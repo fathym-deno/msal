@@ -1,17 +1,17 @@
 import { MSALAuthProvider } from "../MSALAuthProvider.ts";
 import {
-  EaCMSALProcessor,
+  type EaCMSALProcessor,
   isEaCMSALProcessor,
 } from "../eac/EaCMSALProcessor.ts";
 import {
-  Configuration,
-  EaCAzureADProviderDetails,
-  EaCRuntimeHandler,
+  type Configuration,
+  type EaCAzureADProviderDetails,
+  type EaCRuntimeHandler,
   msal,
-  ProcessorHandlerResolver,
+  type ProcessorHandlerResolver,
 } from "../src.deps.ts";
-import { MSALPluginConfiguration } from "./MSALPluginConfiguration.ts";
-import { MSALSessionDataLoaderResolver } from "./MSALSessionDataLoaderResolver.ts";
+import type { MSALPluginConfiguration } from "./MSALPluginConfiguration.ts";
+import type { MSALSessionDataLoaderResolver } from "./MSALSessionDataLoaderResolver.ts";
 import { establishMsalAcquireTokenRoute } from "./routes/acquire-token.ts";
 import { establishMsalCallbackRoute } from "./routes/callback.ts";
 import { establishMsalSignInRoute } from "./routes/signin.ts";

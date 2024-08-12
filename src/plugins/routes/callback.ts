@@ -1,6 +1,6 @@
-import { EaCRuntimeHandlers } from "../../src.deps.ts";
-import { MSALPluginConfiguration } from "../MSALPluginConfiguration.ts";
-import { MSALSessionDataLoader } from "../MSALSessionDataLoader.ts";
+import type { EaCRuntimeHandlers } from "../../src.deps.ts";
+import type { MSALPluginConfiguration } from "../MSALPluginConfiguration.ts";
+import type { MSALSessionDataLoader } from "../MSALSessionDataLoader.ts";
 
 export function establishMsalCallbackRoute(
   config: MSALPluginConfiguration,

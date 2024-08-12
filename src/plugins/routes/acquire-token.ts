@@ -1,6 +1,6 @@
-import { EaCRuntimeHandlers } from "../../src.deps.ts";
-import { MSALSessionDataLoader } from "../MSALSessionDataLoader.ts";
-import { MSALPluginConfiguration } from "../MSALPluginConfiguration.ts";
+import type { EaCRuntimeHandlers } from "../../src.deps.ts";
+import type { MSALSessionDataLoader } from "../MSALSessionDataLoader.ts";
+import type { MSALPluginConfiguration } from "../MSALPluginConfiguration.ts";
 
 export function establishMsalAcquireTokenRoute(
   config: MSALPluginConfiguration,

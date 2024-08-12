@@ -1,7 +1,8 @@
 import { isEaCMSALProcessor } from "../eac/EaCMSALProcessor.ts";
-import {
+import type {
   EaCApplicationProcessorConfig,
   EaCRuntimeEaC,
+  EaCRuntimeHandler,
   IoCContainer,
   ProcessorHandlerResolver,
 } from "../src.deps.ts";
@@ -12,7 +13,7 @@ export class DefaultMSALProcessorHandlerResolver
     ioc: IoCContainer,
     appProcCfg: EaCApplicationProcessorConfig,
     eac: EaCRuntimeEaC,
-  ) {
+  ): Promise<EaCRuntimeHandler | undefined> {
     let toResolveName: string = "";
 
     if (isEaCMSALProcessor(appProcCfg.Application.Processor)) {

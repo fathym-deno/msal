@@ -1,11 +1,11 @@
 import {
-  EaCRuntimeConfig,
-  EaCRuntimePlugin,
-  EaCRuntimePluginConfig,
+  type EaCRuntimeConfig,
+  type EaCRuntimePlugin,
+  type EaCRuntimePluginConfig,
   IoCContainer,
 } from "../src.deps.ts";
 import { EaCMSALProcessorHandlerResolver } from "./EaCMSALProcessorHandlerResolver.ts";
-import { MSALSessionDataLoaderResolver } from "./MSALSessionDataLoaderResolver.ts";
+import type { MSALSessionDataLoaderResolver } from "./MSALSessionDataLoaderResolver.ts";
 
 export default class MSALPlugin implements EaCRuntimePlugin {
   constructor(
