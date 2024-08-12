@@ -1,16 +1,21 @@
 {
+  "name": "@fathym/msal",
+  "version": "0.0.0",
+  "exports": {
+    ".": "./mod.ts"
+  },
   "tasks": {
-    "build": "deno task build:fmt && deno task build:lint && deno task test",
+    "build": "deno task build:fmt && deno task build:lint && deno task publish:check && deno task test",
     "build:fmt": "deno fmt",
     "build:lint": "deno lint",
     "deploy": "deno task build && ftm git",
     "npm:build": "deno run -A scripts/npm.build.ts",
     "npm:publish": "npm publish ./build --access public",
-    "test": "deno test -A ./tests/tests.ts --coverage=cov"
+    "publish:check": "deno publish --dry-run --allow-dirty",
+    "test": "deno test -A ./tests/tests.ts --coverage=cov",
+    "version": "deno run -A jsr:@fathym/common@0.0.211/version"
   },
-  "imports": {
-    "$dnt": "https://deno.land/x/dnt/mod.ts"
-  },
+  "imports": {},
   "compilerOptions": {
     "lib": [
       "deno.unstable",
@@ -22,18 +27,12 @@
   },
   "lock": false,
   "fmt": {
-    "include": [
-      "./**/*.ts",
-      "./**/*.tsx"
-    ],
+    "include": ["./**/*.ts", "./**/*.tsx"],
     "exclude": [],
     "options": {}
   },
   "lint": {
-    "include": [
-      "./**/*.ts",
-      "./**/*.tsx"
-    ],
+    "include": ["./**/*.ts", "./**/*.tsx"],
     "exclude": [],
     "rules": {
       "include": [],

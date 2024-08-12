@@ -1,8 +1,8 @@
-export * from "https://deno.land/x/fathym_common@v0.0.185/mod.ts";
-export * from "https://deno.land/x/fathym_eac_runtime@v0.0.275/mod.ts";
-export * from "https://deno.land/x/fathym_everything_as_code@v0.0.415/mod.ts";
-export * from "https://deno.land/x/fathym_ioc@v0.0.10/mod.ts";
-export * as msal from "npm:@azure/msal-node@2.1.0";
-export * from "npm:@azure/msal-node@2.1.0";
-export { type AccessToken } from "npm:@azure/identity";
-export * as ArmResource from "npm:@azure/arm-subscriptions";
+export * from 'jsr:@fathym/common@0';
+export * from 'jsr:@fathym/eac@0';
+export * from 'jsr:@fathym/eac-runtime@0';
+export * from 'jsr:@fathym/ioc@0';
+export * as msal from 'npm:@azure/msal-node@2.1.0';
+export * from 'npm:@azure/msal-node@2.1.0';
+export { type AccessToken } from 'npm:@azure/identity@2.1.0';
+export * as ArmResource from 'npm:@azure/arm-subscriptions@5.1.0';
