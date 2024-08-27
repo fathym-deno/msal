@@ -5,6 +5,7 @@ import {
   type AuthorizationCodeRequest,
   type AuthorizationUrlRequest,
   type Configuration,
+  getPackageLogger,
   msal,
   redirectRequest,
 } from "./src.deps.ts";
@@ -293,6 +294,8 @@ export class MSALAuthProvider {
 
   //#region Helpers
   protected async getAuthorityMetadata(): Promise<any> {
+    const logger = await getPackageLogger();
+
     const endpoint =
       `${this.msalConfig.auth.authority}/v2.0/.well-known/openid-configuration`;
 
@@ -301,7 +304,10 @@ export class MSALAuthProvider {
 
       return await response.json();
     } catch (error) {
-      console.log(error);
+      logger.error(
+        "There was an issue resolving the authority metadata",
+        error,
+      );
     }
   }
 
