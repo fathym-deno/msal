@@ -1,10 +1,11 @@
-export * from "jsr:@fathym/common@0.2.33";
+export * from "jsr:@fathym/common@0.2.155";
+export * from "jsr:@fathym/common@0.2.155/log";
 
-export * from "jsr:@fathym/eac@0.1.21";
-export * from "jsr:@fathym/eac@0.1.21/applications";
-export * from "jsr:@fathym/eac@0.1.21/identity";
+export * from "jsr:@fathym/eac@0.1.66";
+export * from "jsr:@fathym/eac@0.1.66/applications";
+export * from "jsr:@fathym/eac@0.1.66/identity";
 
-export * from "jsr:@fathym/eac-runtime@0.1.16";
+export * from "jsr:@fathym/eac-runtime@0.1.32";
 
 export * from "jsr:@fathym/ioc@0.0.12";
 

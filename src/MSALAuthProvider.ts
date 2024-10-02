@@ -294,7 +294,7 @@ export class MSALAuthProvider {
 
   //#region Helpers
   protected async getAuthorityMetadata(): Promise<any> {
-    const logger = await getPackageLogger();
+    const logger = await getPackageLogger(import.meta);
 
     const endpoint =
       `${this.msalConfig.auth.authority}/v2.0/.well-known/openid-configuration`;
