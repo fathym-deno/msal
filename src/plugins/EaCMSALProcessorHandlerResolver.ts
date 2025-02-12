@@ -7,6 +7,8 @@ import {
   type Configuration,
   type EaCAzureADProviderDetails,
   type EaCRuntimeHandler,
+  type EverythingAsCode,
+  type EverythingAsCodeIdentity,
   msal,
   type ProcessorHandlerResolver,
 } from "../src.deps.ts";
@@ -18,7 +20,11 @@ import { establishMsalSignInRoute } from "./routes/signin.ts";
 import { establishMsalSignOutRoute } from "./routes/signout.ts";
 
 export const EaCMSALProcessorHandlerResolver: ProcessorHandlerResolver = {
-  async Resolve(ioc, appProcCfg, eac) {
+  async Resolve(
+    ioc,
+    appProcCfg,
+    eac: EverythingAsCode & EverythingAsCodeIdentity,
+  ) {
     if (!isEaCMSALProcessor(appProcCfg.Application.Processor)) {
       throw new Deno.errors.NotSupported(
         "The provided processor is not supported for the EaCMSALProcessorHandlerResolver.",
