@@ -1,14 +1,14 @@
 export * from "jsr:@fathym/common@0.2.179";
 export * from "jsr:@fathym/common@0.2.179/log";
 
-export * from "jsr:@fathym/eac@0.2.94";
-export * from "jsr:@fathym/eac@0.2.94/runtime";
-export * from "jsr:@fathym/eac@0.2.94/runtime/config";
-export * from "jsr:@fathym/eac@0.2.94/runtime/pipelines";
-export * from "jsr:@fathym/eac@0.2.94/runtime/plugins";
+export * from "jsr:@fathym/eac@0.2.96";
+export * from "jsr:@fathym/eac@0.2.96/runtime";
+export * from "jsr:@fathym/eac@0.2.96/runtime/config";
+export * from "jsr:@fathym/eac@0.2.96/runtime/pipelines";
+export * from "jsr:@fathym/eac@0.2.96/runtime/plugins";
 
-export * from "jsr:@fathym/eac-applications@0.0.102/processors";
-export * from "jsr:@fathym/eac-applications@0.0.102/runtime/processors";
+export * from "jsr:@fathym/eac-applications@0.0.112/processors";
+export * from "jsr:@fathym/eac-applications@0.0.112/runtime/processors";
 
 export * from "jsr:@fathym/eac-identity@0.0.12";
 
