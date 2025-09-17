@@ -36,12 +36,11 @@ export function establishMsalSignInRoute(
       return config.MSALAuthProvider.SignIn(req, sessionDataLoader, {
         ...config.MSALSignInOptions,
         RedirectURI: callback.href,
-        SuccessRedirect: successOverride ?? config.MSALSignInOptions?.SuccessRedirect ?? "/",
+        SuccessRedirect: successOverride ??
+          config.MSALSignInOptions?.SuccessRedirect ?? "/",
       });
     },
   };
 
   return handler;
 }
-
-
