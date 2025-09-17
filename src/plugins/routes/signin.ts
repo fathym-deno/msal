@@ -30,15 +30,18 @@ export function establishMsalSignInRoute(
         new URL(path, new URL(`${proto}://${host}`)),
       );
 
+      const searchParams = new URLSearchParams(ctx.Runtime.URLMatch.Search);
+      const successOverride = searchParams.get("success_url");
+
       return config.MSALAuthProvider.SignIn(req, sessionDataLoader, {
         ...config.MSALSignInOptions,
         RedirectURI: callback.href,
-        SuccessRedirect: new URLSearchParams(ctx.Runtime.URLMatch.Search).get(
-          "success_url",
-        )!,
+        SuccessRedirect: successOverride ?? config.MSALSignInOptions?.SuccessRedirect ?? "/",
       });
     },
   };
 
   return handler;
 }
+
+
