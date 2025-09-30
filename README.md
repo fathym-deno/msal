@@ -39,8 +39,7 @@ export const msalCryptoProvider = new msal.CryptoProvider();
 export const msalConfig: Configuration = {
   auth: {
     clientId: Deno.env.get('MSAL_CLIENT_ID')!,
-    authority:
-      Deno.env.get('MSAL_CLOUD_INSTANCE')! + Deno.env.get('MSAL_TENANT_ID')!,
+    authority: Deno.env.get('MSAL_CLOUD_INSTANCE')! + Deno.env.get('MSAL_TENANT_ID')!,
     clientSecret: Deno.env.get('MSAL_CLIENT_SECRET')!,
   },
   system: {
@@ -56,13 +55,13 @@ export const msalConfig: Configuration = {
 
 export const MSAL_REDIRECT_URI = Deno.env.get('MSAL_REDIRECT_URI')!;
 export const MSAL_POST_LOGOUT_REDIRECT_URI = Deno.env.get(
-  'MSAL_POST_LOGOUT_REDIRECT_URI'
+  'MSAL_POST_LOGOUT_REDIRECT_URI',
 )!;
 
 export const msalAuthProvider = new MSALAuthProvider(
   msalConfig,
   msalCryptoProvider,
-  denoKv
+  denoKv,
 );
 
 export const msalPluginConfig: MSALPluginConfiguration = {
@@ -124,13 +123,13 @@ export const handler = [
   buildIsConnectedCheckMiddleware(msalPluginConfig, (ctx, err) => {
     const headers = new Headers();
 
-    headers.set('location', "/cloud/azure/auth/signin");
+    headers.set('location', '/cloud/azure/auth/signin');
 
     return Promise.resolve(
       new Response(null, {
         status: status,
         headers,
-      })
+      }),
     );
   }),
 ];
