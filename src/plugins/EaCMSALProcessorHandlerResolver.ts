@@ -102,24 +102,20 @@ export const EaCMSALProcessorHandlerResolver: ProcessorHandlerResolver = {
     );
 
     const handler: EaCRuntimeHandler = (req, ctx) => {
-      const msalPath = ctx.Runtime.URLMatch.Path;
+      const msalPath = ctx.Runtime.URLMatch.Path ?? "";
+      const normalizedPath = msalPath.replace(/^\//, "");
+      const segments = normalizedPath.split("/").filter(Boolean);
+      const action = segments.pop();
 
-      switch (msalPath) {
-        case "signin": {
+      switch (action) {
+        case "signin":
           return msalSignInRoute.GET!(req, ctx);
-        }
-
-        case "callback": {
+        case "callback":
           return msalRedirectRoute.GET!(req, ctx);
-        }
-
-        case "signout": {
+        case "signout":
           return msalSignOutRoute.GET!(req, ctx);
-        }
-
-        case "acquire-token": {
+        case "acquire-token":
           return msalAcquireTokenRoute.GET!(req, ctx);
-        }
       }
 
       return ctx.Next();
