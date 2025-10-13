@@ -7,8 +7,8 @@ export * from "jsr:@fathym/eac@0.2.131/runtime/config";
 export * from "jsr:@fathym/eac@0.2.131/runtime/pipelines";
 export * from "jsr:@fathym/eac@0.2.131/runtime/plugins";
 
-export * from "jsr:@fathym/eac-applications@0.0.205/processors";
-export * from "jsr:@fathym/eac-applications@0.0.205/runtime/processors";
+export * from "jsr:@fathym/eac-applications@0.0.208/processors";
+export * from "jsr:@fathym/eac-applications@0.0.208/runtime/processors";
 
 export * from "jsr:@fathym/eac-identity@0.0.28";
 
