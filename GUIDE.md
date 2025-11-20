@@ -13,16 +13,17 @@ References:
   - Label: Project Agents Guide
     Path: ./AGENTS.md
   - Label: Projects: Ref-Arch README
-    Path: ../README.md
+      Path: ../README.md
   - Label: Projects: Ref-Arch Guide
-    Path: ../GUIDE.md
+      Path: ../GUIDE.md
   - Label: Root Workspace Guide
     Path: ../../../WORKSPACE_GUIDE.md
 ---
 
 # MSAL for Deno Guide
 
-Use this playbook to keep the MSAL wrapper predictable, secure, and discoverable.
+Use this playbook to keep the MSAL wrapper predictable, secure, and
+discoverable.
 
 ## Current Focus
 

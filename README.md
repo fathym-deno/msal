@@ -9,11 +9,11 @@ Owners:
   - fathym
 References:
   - Label: Projects: Ref-Arch README
-    Path: ../README.md
+      Path: ../README.md
   - Label: Projects: Ref-Arch AGENTS
-    Path: ../AGENTS.md
+      Path: ../AGENTS.md
   - Label: Projects: Ref-Arch Guide
-    Path: ../GUIDE.md
+      Path: ../GUIDE.md
   - Label: Root README
     Path: ../../../README.md
   - Label: Root Agents Guide
@@ -33,8 +33,7 @@ Deno-focused implementation of the Microsoft Authentication Library, leveraging
 
 - **Goal:** provide a reliable MSAL wrapper with clear examples for Deno apps
   and micro frontends.
-- **Outputs:** library code, usage docs, and packaging for Deno/npm as
-  required.
+- **Outputs:** library code, usage docs, and packaging for Deno/npm as required.
 - **Code location:** this folder currently hosts the source; link external repos
   if the implementation moves.
 
@@ -67,18 +66,20 @@ configuration file:
 Configure MSAL in a new `msal.config.ts` file (Fresh example):
 
 ```ts
-import * as msal from 'npm:@azure/msal-node@2.1.0';
-import { Configuration } from 'npm:@azure/msal-node@2.1.0';
-import { MSALAuthProvider, MSALPluginConfiguration } from '@fathym/msal';
-import { denoKv } from './deno-kv.config.ts';
+import * as msal from "npm:@azure/msal-node@2.1.0";
+import { Configuration } from "npm:@azure/msal-node@2.1.0";
+import { MSALAuthProvider, MSALPluginConfiguration } from "@fathym/msal";
+import { denoKv } from "./deno-kv.config.ts";
 
 export const msalCryptoProvider = new msal.CryptoProvider();
 
 export const msalConfig: Configuration = {
   auth: {
-    clientId: Deno.env.get('AZURE_CLIENT_ID')!,
-    authority: `https://login.microsoftonline.com/${Deno.env.get('AZURE_TENANT_ID')}`,
-    clientSecret: Deno.env.get('AZURE_CLIENT_SECRET')!,
+    clientId: Deno.env.get("AZURE_CLIENT_ID")!,
+    authority: `https://login.microsoftonline.com/${
+      Deno.env.get("AZURE_TENANT_ID")
+    }`,
+    clientSecret: Deno.env.get("AZURE_CLIENT_SECRET")!,
   },
   system: {
     loggerOptions: {
@@ -94,7 +95,7 @@ export const msalConfig: Configuration = {
 export const msalPluginConfig: MSALPluginConfiguration = {
   cachePluginConfig: {
     cachePlugin: denoKv(
-      Deno.env.get('MSAL_CACHE_CONNECTION_STRING')!,
+      Deno.env.get("MSAL_CACHE_CONNECTION_STRING")!,
     ),
   },
   kv: {
@@ -104,10 +105,10 @@ export const msalPluginConfig: MSALPluginConfiguration = {
 };
 ```
 
-The upstream Microsoft tutorial explains how to sign in users and acquire
-tokens for Microsoft Graph. This implementation aims to provide the same
-functionality for Deno. Deno Fresh examples above apply; using this with other
-frameworks is possible—pull requests are welcome to expand the documentation.
+The upstream Microsoft tutorial explains how to sign in users and acquire tokens
+for Microsoft Graph. This implementation aims to provide the same functionality
+for Deno. Deno Fresh examples above apply; using this with other frameworks is
+possible—pull requests are welcome to expand the documentation.
 
 ## How to Work in This Pod
 
@@ -116,6 +117,6 @@ frameworks is possible—pull requests are welcome to expand the documentation.
 2. Declare intent before editing; summarize outcomes and open questions in this
    README or a short log.
 3. Capture provenance, release channels, and packaging details in `UPSTREAM.md`
-  ; keep npm/deno references in sync.
+   ; keep npm/deno references in sync.
 4. Keep links relative; reference implementation repos/branches when selected.
 5. Record prompts/scripts used when designing auth flows or automations.

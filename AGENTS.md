@@ -13,11 +13,11 @@ References:
   - Label: Project Guide
     Path: ./GUIDE.md
   - Label: Projects: Ref-Arch README
-    Path: ../README.md
+      Path: ../README.md
   - Label: Projects: Ref-Arch AGENTS
-    Path: ../AGENTS.md
+      Path: ../AGENTS.md
   - Label: Projects: Ref-Arch Guide
-    Path: ../GUIDE.md
+      Path: ../GUIDE.md
   - Label: Root README
     Path: ../../../README.md
   - Label: Root Agents Guide
@@ -34,7 +34,7 @@ Guardrails for humans and AI collaborating on the Fathym MSAL wrapper.
 
 1. **Stay scoped.** Keep MSAL work under `projects/ref-arch/msal/` unless
    coordinating with another pod; link cross-pod dependencies (e.g.,
-   micro-apps) explicitly.
+   micro-frameworks) explicitly.
 2. **Frontmatter required.** Every Markdown doc uses frontmatter and
    document-relative references up to parent guides.
 3. **Provenance & packaging.** Capture upstream sources (msal-node), release
