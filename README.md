@@ -28,28 +28,21 @@ References:
 
 # Fathym MSAL for Deno
 
-Deno-focused implementation of the Microsoft Authentication Library, leveraging
-`msal-node` to enable Azure AD auth flows for Deno runtimes (including Fresh).
+Deno-focused implementation of the Microsoft Authentication Library, leveraging `msal-node` to enable Azure AD auth flows for Deno runtimes (including Fresh).
 
-- **Goal:** provide a reliable MSAL wrapper with clear examples for Deno apps
-  and micro frontends.
+- **Goal:** provide a reliable MSAL wrapper with clear examples for Deno apps and micro frontends.
 - **Outputs:** library code, usage docs, and packaging for Deno/npm as required.
-- **Code location:** this folder currently hosts the source; link external repos
-  if the implementation moves.
+- **Code location:** this folder currently hosts the source; link external repos if the implementation moves.
 
 ## Current Status
 
-- Based on the Microsoft tutorial for MSAL Node; see
-  [msal-tutorial](https://learn.microsoft.com/en-us/entra/identity-platform/tutorial-v2-nodejs-webapp-msal)
-  for the upstream guide.
-- Tasks available: `deno task test`, `deno task build`, `deno task deploy`,
-  `deno task publish:check`, `deno task npm:build/publish`.
+- Based on the Microsoft tutorial for MSAL Node; see [msal-tutorial](https://learn.microsoft.com/en-us/entra/identity-platform/tutorial-v2-nodejs-webapp-msal) for the upstream guide.
+- Tasks available: `deno task test`, `deno task build`, `deno task deploy`, `deno task publish:check`, `deno task npm:build/publish`.
 - Packaging and version pins not yet captured in `UPSTREAM.md`.
 
 ## Getting Started with MSAL in Deno Fresh
 
-To get started with MSAL for Deno, add the following to your `deno.json`
-configuration file:
+To get started with MSAL for Deno, add the following to your `deno.json` configuration file:
 
 ```json
 {
@@ -76,9 +69,7 @@ export const msalCryptoProvider = new msal.CryptoProvider();
 export const msalConfig: Configuration = {
   auth: {
     clientId: Deno.env.get("AZURE_CLIENT_ID")!,
-    authority: `https://login.microsoftonline.com/${
-      Deno.env.get("AZURE_TENANT_ID")
-    }`,
+    authority: `https://login.microsoftonline.com/${Deno.env.get("AZURE_TENANT_ID")}`,
     clientSecret: Deno.env.get("AZURE_CLIENT_SECRET")!,
   },
   system: {
@@ -105,18 +96,12 @@ export const msalPluginConfig: MSALPluginConfiguration = {
 };
 ```
 
-The upstream Microsoft tutorial explains how to sign in users and acquire tokens
-for Microsoft Graph. This implementation aims to provide the same functionality
-for Deno. Deno Fresh examples above apply; using this with other frameworks is
-possible—pull requests are welcome to expand the documentation.
+The upstream Microsoft tutorial explains how to sign in users and acquire tokens for Microsoft Graph. This implementation aims to provide the same functionality for Deno. Deno Fresh examples above apply; using this with other frameworks is possible—pull requests are welcome to expand the documentation.
 
 ## How to Work in This Pod
 
-1. Review the root and portfolio Instruction Documents plus this project’s
-   [`AGENTS`](./AGENTS.md) and [`GUIDE`](./GUIDE.md).
-2. Declare intent before editing; summarize outcomes and open questions in this
-   README or a short log.
-3. Capture provenance, release channels, and packaging details in `UPSTREAM.md`
-   ; keep npm/deno references in sync.
+1. Review the root and portfolio Instruction Documents plus this project’s [`AGENTS`](./AGENTS.md) and [`GUIDE`](./GUIDE.md).
+2. Declare intent before editing; summarize outcomes and open questions in this README or a short log.
+3. Capture provenance, release channels, and packaging details in `UPSTREAM.md` ; keep npm/deno references in sync.
 4. Keep links relative; reference implementation repos/branches when selected.
 5. Record prompts/scripts used when designing auth flows or automations.

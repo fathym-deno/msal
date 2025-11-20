@@ -1,14 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import {
-  type AccountInfo,
-  type AuthorizationCodePayload,
-  type AuthorizationCodeRequest,
-  type AuthorizationUrlRequest,
-  type Configuration,
-  getPackageLogger,
-  msal,
-  redirectRequest,
-} from "./src.deps.ts";
+import { type AccountInfo, type AuthorizationCodePayload, type AuthorizationCodeRequest, type AuthorizationUrlRequest, type Configuration, getPackageLogger, msal, redirectRequest } from "./src.deps.ts";
 import type { MSALAcquireTokenOptions } from "./MSALAcquireTokenOptions.ts";
 import type { MSALSignInOptions } from "./MSALSignInOptions.ts";
 import type { MSALSignOutOptions } from "./MSALSignOutOptions.ts";
@@ -276,8 +267,7 @@ export class MSALAuthProvider {
     let logoutUri = `${this.msalConfig.auth.authority}/oauth2/v2.0/`;
 
     if (options.PostLogoutRedirectUri) {
-      logoutUri +=
-        `logout?post_logout_redirect_uri=${options.PostLogoutRedirectUri}`;
+      logoutUri += `logout?post_logout_redirect_uri=${options.PostLogoutRedirectUri}`;
     }
 
     await this.denoKv.delete([
@@ -296,8 +286,7 @@ export class MSALAuthProvider {
   protected async getAuthorityMetadata(): Promise<any> {
     const logger = await getPackageLogger(import.meta);
 
-    const endpoint =
-      `${this.msalConfig.auth.authority}/v2.0/.well-known/openid-configuration`;
+    const endpoint = `${this.msalConfig.auth.authority}/v2.0/.well-known/openid-configuration`;
 
     try {
       const response = await fetch(endpoint, { method: "GET" });
@@ -312,8 +301,7 @@ export class MSALAuthProvider {
   }
 
   protected async getCloudDiscoveryMetadata(): Promise<any> {
-    const endpoint =
-      `https://login.microsoftonline.com/common/discovery/instance?api-version=1.1&authorization_endpoint=${this.msalConfig.auth.authority}/oauth2/v2.0/authorize`;
+    const endpoint = `https://login.microsoftonline.com/common/discovery/instance?api-version=1.1&authorization_endpoint=${this.msalConfig.auth.authority}/oauth2/v2.0/authorize`;
 
     try {
       const response = await fetch(endpoint, {

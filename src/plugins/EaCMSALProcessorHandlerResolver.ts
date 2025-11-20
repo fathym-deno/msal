@@ -1,17 +1,6 @@
 import { MSALAuthProvider } from "../MSALAuthProvider.ts";
-import {
-  type EaCMSALProcessor,
-  isEaCMSALProcessor,
-} from "../eac/EaCMSALProcessor.ts";
-import {
-  type Configuration,
-  type EaCAzureADProviderDetails,
-  type EaCRuntimeHandler,
-  type EverythingAsCode,
-  type EverythingAsCodeIdentity,
-  msal,
-  type ProcessorHandlerResolver,
-} from "../src.deps.ts";
+import { type EaCMSALProcessor, isEaCMSALProcessor } from "../eac/EaCMSALProcessor.ts";
+import { type Configuration, type EaCAzureADProviderDetails, type EaCRuntimeHandler, type EverythingAsCode, type EverythingAsCodeIdentity, msal, type ProcessorHandlerResolver } from "../src.deps.ts";
 import type { MSALPluginConfiguration } from "./MSALPluginConfiguration.ts";
 import type { MSALSessionDataLoaderResolver } from "./MSALSessionDataLoaderResolver.ts";
 import { establishMsalAcquireTokenRoute } from "./routes/acquire-token.ts";
@@ -46,8 +35,7 @@ export const EaCMSALProcessorHandlerResolver: ProcessorHandlerResolver = {
       auth: {
         clientId: providerDetails.ClientID,
         clientSecret: providerDetails.ClientSecret,
-        authority:
-          `https://login.microsoftonline.com/${providerDetails.TenantID}`,
+        authority: `https://login.microsoftonline.com/${providerDetails.TenantID}`,
       },
       system: {
         loggerOptions: {
