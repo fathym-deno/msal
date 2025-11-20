@@ -1,18 +1,56 @@
-# MSAL for Deno
+---
+FrontmatterVersion: 1
+DocumentType: Guide
+Title: Fathym MSAL for Deno
+Summary: Deno wrapper for the Microsoft Authentication Library (MSAL) built on msal-node.
+Created: 2025-11-20
+Updated: 2025-11-20
+Owners:
+  - fathym
+References:
+  - Label: Projects: Ref-Arch README
+    Path: ../README.md
+  - Label: Projects: Ref-Arch AGENTS
+    Path: ../AGENTS.md
+  - Label: Projects: Ref-Arch Guide
+    Path: ../GUIDE.md
+  - Label: Root README
+    Path: ../../../README.md
+  - Label: Root Agents Guide
+    Path: ../../../AGENTS.md
+  - Label: Root Workspace Guide
+    Path: ../../../WORKSPACE_GUIDE.md
+  - Label: Project Agents Guide
+    Path: ./AGENTS.md
+  - Label: Project Guide
+    Path: ./GUIDE.md
+---
 
-This is an implementation of the Azure MSAL (Microsoft Authentication Library) for Deno using msal-node.
+# Fathym MSAL for Deno
 
-This project is based on the tutorial provided by Microsoft, which can be found at the following link: [msal-tutorial](https://learn.microsoft.com/en-us/entra/identity-platform/tutorial-v2-nodejs-webapp-msal)
+Deno-focused implementation of the Microsoft Authentication Library, leveraging
+`msal-node` to enable Azure AD auth flows for Deno runtimes (including Fresh).
 
-The tutorial provides a step-by-step guide on how to sign in users and acquire tokens for calling Microsoft Graph in a Node.js & Express web app using the Microsoft Authentication Library (MSAL) for Node.
+- **Goal:** provide a reliable MSAL wrapper with clear examples for Deno apps
+  and micro frontends.
+- **Outputs:** library code, usage docs, and packaging for Deno/npm as
+  required.
+- **Code location:** this folder currently hosts the source; link external repos
+  if the implementation moves.
 
-This implementation aims to provide similar functionality, but for Deno environments.
+## Current Status
 
-The following explains how to use with Deno Fresh, using this with Deno standalone and other frameworks is possible. Pull requests are welcome to fill out this additional documentation.
+- Based on the Microsoft tutorial for MSAL Node; see
+  [msal-tutorial](https://learn.microsoft.com/en-us/entra/identity-platform/tutorial-v2-nodejs-webapp-msal)
+  for the upstream guide.
+- Tasks available: `deno task test`, `deno task build`, `deno task deploy`,
+  `deno task publish:check`, `deno task npm:build/publish`.
+- Packaging and version pins not yet captured in `UPSTREAM.md`.
 
 ## Getting Started with MSAL in Deno Fresh
 
-To get started with MSAL for Deno, you need to add the following to your `deno.json` configuration file:
+To get started with MSAL for Deno, add the following to your `deno.json`
+configuration file:
 
 ```json
 {
@@ -26,7 +64,7 @@ To get started with MSAL for Deno, you need to add the following to your `deno.j
 }
 ```
 
-After that is setup, you can configure your MSAL in a new `msal.config.ts` file like the following example:
+Configure MSAL in a new `msal.config.ts` file (Fresh example):
 
 ```ts
 import * as msal from 'npm:@azure/msal-node@2.1.0';
@@ -38,101 +76,46 @@ export const msalCryptoProvider = new msal.CryptoProvider();
 
 export const msalConfig: Configuration = {
   auth: {
-    clientId: Deno.env.get('MSAL_CLIENT_ID')!,
-    authority: Deno.env.get('MSAL_CLOUD_INSTANCE')! + Deno.env.get('MSAL_TENANT_ID')!,
-    clientSecret: Deno.env.get('MSAL_CLIENT_SECRET')!,
+    clientId: Deno.env.get('AZURE_CLIENT_ID')!,
+    authority: `https://login.microsoftonline.com/${Deno.env.get('AZURE_TENANT_ID')}`,
+    clientSecret: Deno.env.get('AZURE_CLIENT_SECRET')!,
   },
   system: {
     loggerOptions: {
-      loggerCallback(_loglevel, message, _containsPii) {
-        console.log(message);
+      loggerCallback(...args: unknown[]) {
+        console.log(...args);
       },
+      logLevel: msal.LogLevel.Verbose,
       piiLoggingEnabled: false,
-      logLevel: 3,
     },
   },
 };
 
-export const MSAL_REDIRECT_URI = Deno.env.get('MSAL_REDIRECT_URI')!;
-export const MSAL_POST_LOGOUT_REDIRECT_URI = Deno.env.get(
-  'MSAL_POST_LOGOUT_REDIRECT_URI',
-)!;
-
-export const msalAuthProvider = new MSALAuthProvider(
-  msalConfig,
-  msalCryptoProvider,
-  denoKv,
-);
-
 export const msalPluginConfig: MSALPluginConfiguration = {
-  MSALAuthProvider: msalAuthProvider,
-  MSALSignInOptions: {
-    Scopes: ['https://management.core.windows.net//user_impersonation'], // Your desired scopes go here
-    RedirectURI: MSAL_REDIRECT_URI,
-    SuccessRedirect: '/cloud', // Replace with your descired success redirect URL
+  cachePluginConfig: {
+    cachePlugin: denoKv(
+      Deno.env.get('MSAL_CACHE_CONNECTION_STRING')!,
+    ),
   },
-  MSALSignOutOptions: {
-    ClearSession: false,
-    PostLogoutRedirectUri: MSAL_POST_LOGOUT_REDIRECT_URI,
+  kv: {
+    provision: true,
   },
-  RootPath: 'cloud/azure/auth', // Replace with your descired root path or remove to use the default 'azure/auth' path
+  NodeCacheManager: msal.NodeStorage,
 };
 ```
 
-For this to work, you will need to update your `.env` file with the following configurations:
+The upstream Microsoft tutorial explains how to sign in users and acquire
+tokens for Microsoft Graph. This implementation aims to provide the same
+functionality for Deno. Deno Fresh examples above apply; using this with other
+frameworks is possible—pull requests are welcome to expand the documentation.
 
-```
-MSAL_CLIENT_ID=replace_with_your_client_id
-MSAL_CLOUD_INSTANCE=https://login.microsoftonline.com/
-MSAL_CLIENT_SECRET=replace_with_your_client_secret
-MSAL_POST_LOGOUT_REDIRECT_URI=/
-MSAL_REDIRECT_URI=http://localhost:8000/cloud/azure/auth/redirect
-MSAL_TENANT_ID=replace_with_your_azure_tenant_id
-```
+## How to Work in This Pod
 
-You can use a different `MSAL_CLOUD_INSTANCE` url if you need to, and make sure to update the `MSAL_POST_LOGOUT_REDIRECT_URI` and `MSAL_REDIRECT_URI` with appropriate values for your application.
-
-In order to setup your new MSAL client application, you will need to follow the documentation [here](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app).
-
-Finally, you will need to update your fresh config to leverage the plugin:
-
-```
-import { defineConfig } from "$fresh/server.ts";
-import { msalPlugin } from "@fathym/msal";
-import { msalPluginConfig } from "./configs/msal.config.ts";
-
-export default defineConfig({
-  plugins: [
-    msalPlugin(msalPluginConfig),
-  ],
-});
-```
-
-Make sure that you add the `msalPlugin(...)` alongside any other configured plugins.
-
-## Setup in Review
-
-With all the previous configurations in place, you will now be able to leverage MSAL in your application. The routes are configured for you and the easiest way to manage redirection to the sign in page in Deno Fresh is leveraging the built in middleware helper. Place the following `_middleware.ts` file in a routes folder that needs the MSAL authentication:
-
-```ts
-import { msalPluginConfig } from '../../configs/msal.config.ts';
-import { buildIsConnectedCheckMiddleware } from '@fathym/msal';
-import { OpenBiotechManagerState } from '../../src/OpenBiotechManagerState.tsx';
-
-export const handler = [
-  buildIsConnectedCheckMiddleware(msalPluginConfig, (ctx, err) => {
-    const headers = new Headers();
-
-    headers.set('location', '/cloud/azure/auth/signin');
-
-    return Promise.resolve(
-      new Response(null, {
-        status: status,
-        headers,
-      }),
-    );
-  }),
-];
-```
-
-You can also simply link to the configured signin route (`/cloud/azure/auth/signin` in our example configuration) from any link.
+1. Review the root and portfolio Instruction Documents plus this project’s
+   [`AGENTS`](./AGENTS.md) and [`GUIDE`](./GUIDE.md).
+2. Declare intent before editing; summarize outcomes and open questions in this
+   README or a short log.
+3. Capture provenance, release channels, and packaging details in `UPSTREAM.md`
+  ; keep npm/deno references in sync.
+4. Keep links relative; reference implementation repos/branches when selected.
+5. Record prompts/scripts used when designing auth flows or automations.
