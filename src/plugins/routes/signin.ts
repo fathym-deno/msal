@@ -1,4 +1,4 @@
-import type { EaCRuntimeHandlers } from "../../src.deps.ts";
+import type { EaCRuntimeHandlers } from "../../.deps.ts";
 import type { MSALPluginConfiguration } from "../MSALPluginConfiguration.ts";
 import type { MSALSessionDataLoader } from "../MSALSessionDataLoader.ts";
 

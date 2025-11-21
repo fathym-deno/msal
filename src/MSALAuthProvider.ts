@@ -8,7 +8,7 @@ import {
   msal,
   redirectRequest,
   telemetryFor,
-} from "./src.deps.ts";
+} from "./.deps.ts";
 import type { MSALAcquireTokenOptions } from "./MSALAcquireTokenOptions.ts";
 import type { MSALSignInOptions } from "./MSALSignInOptions.ts";
 import type { MSALSignOutOptions } from "./MSALSignOutOptions.ts";

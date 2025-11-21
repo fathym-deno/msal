@@ -2,7 +2,7 @@
   "name": "@fathym/msal",
   "version": "0.0.0",
   "exports": {
-    ".": "./mod.ts"
+    ".": "./src/.exports.ts"
   },
   "tasks": {
     "build": "deno task build:fmt && deno task build:lint && deno task publish:check && deno task test",

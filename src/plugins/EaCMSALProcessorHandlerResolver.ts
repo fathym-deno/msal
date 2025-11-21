@@ -11,7 +11,7 @@ import {
   type EverythingAsCodeIdentity,
   msal,
   type ProcessorHandlerResolver,
-} from "../src.deps.ts";
+} from "../.deps.ts";
 import type { MSALPluginConfiguration } from "./MSALPluginConfiguration.ts";
 import type { MSALSessionDataLoaderResolver } from "./MSALSessionDataLoaderResolver.ts";
 import { establishMsalAcquireTokenRoute } from "./routes/acquire-token.ts";

@@ -5,7 +5,7 @@ import {
   ArmResource,
   type EaCRuntimeContext,
   type EaCRuntimeHandler,
-} from "../src.deps.ts";
+} from "../.deps.ts";
 import type { MSALSessionDataLoader } from "./MSALSessionDataLoader.ts";
 // import { WithSession } from "./WithSession.ts";
 

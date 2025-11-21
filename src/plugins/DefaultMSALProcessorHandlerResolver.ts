@@ -5,7 +5,7 @@ import type {
   EverythingAsCode,
   IoCContainer,
   ProcessorHandlerResolver,
-} from "../src.deps.ts";
+} from "../.deps.ts";
 
 export class DefaultMSALProcessorHandlerResolver
   implements ProcessorHandlerResolver {

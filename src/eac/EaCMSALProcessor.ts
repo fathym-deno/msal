@@ -1,5 +1,5 @@
 import type { MSALPluginConfiguration } from "../plugins/MSALPluginConfiguration.ts";
-import { type EaCProcessor, isEaCProcessor } from "../src.deps.ts";
+import { type EaCProcessor, isEaCProcessor } from "../.deps.ts";
 
 export type EaCMSALProcessor = {
   Config: Omit<MSALPluginConfiguration, "MSALAuthProvider">;
