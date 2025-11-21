@@ -69,7 +69,9 @@ export const msalCryptoProvider = new msal.CryptoProvider();
 export const msalConfig: Configuration = {
   auth: {
     clientId: Deno.env.get("AZURE_CLIENT_ID")!,
-    authority: `https://login.microsoftonline.com/${Deno.env.get("AZURE_TENANT_ID")}`,
+    authority: `https://login.microsoftonline.com/${
+      Deno.env.get("AZURE_TENANT_ID")
+    }`,
     clientSecret: Deno.env.get("AZURE_CLIENT_SECRET")!,
   },
   system: {
