@@ -42,16 +42,16 @@ Deno-focused implementation of the Microsoft Authentication Library, leveraging 
 
 ## Getting Started with MSAL in Deno Fresh
 
-To get started with MSAL for Deno, add the following to your `deno.json` configuration file:
+To get started with MSAL for Deno, add the following to your `deno.json` configuration file (JSR + npm preferred):
 
 ```json
 {
   "imports": {
-    "@fathym/msal": "https://deno.land/x/msal@${VERSION}/src/.exports.ts",
+    "@fathym/msal": "jsr:@fathym/msal@${VERSION}",
     "$fresh/session": "https://deno.land/x/fresh_session@${VERSION}/mod.ts",
-    "preact": "https://esm.sh/preact@${VERSION}",
-    "preact/": "https://esm.sh/preact@${VERSION}/",
-    "preact-render-to-string": "https://esm.sh/*preact-render-to-string@${VERSION}"
+    "preact": "npm:preact@${VERSION}",
+    "preact/": "npm:preact@${VERSION}/",
+    "preact-render-to-string": "npm:preact-render-to-string@${VERSION}"
   }
 }
 ```
