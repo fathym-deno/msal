@@ -1,5 +1,5 @@
-export * from "jsr:@fathym/common@0.2.274";
-export * from "jsr:@fathym/common@0.2.274/log";
+export { redirectRequest } from "jsr:@fathym/common@0.2.287-integration/http";
+export * from "jsr:@fathym/common@0.2.287-integration/telemetry";
 
 export * from "jsr:@fathym/eac@0.2.131";
 export * from "jsr:@fathym/eac@0.2.131/runtime";

@@ -1,7 +1,14 @@
 import { isEaCMSALProcessor } from "../eac/EaCMSALProcessor.ts";
-import type { EaCApplicationProcessorConfig, EaCRuntimeHandler, EverythingAsCode, IoCContainer, ProcessorHandlerResolver } from "../src.deps.ts";
+import type {
+  EaCApplicationProcessorConfig,
+  EaCRuntimeHandler,
+  EverythingAsCode,
+  IoCContainer,
+  ProcessorHandlerResolver,
+} from "../src.deps.ts";
 
-export class DefaultMSALProcessorHandlerResolver implements ProcessorHandlerResolver {
+export class DefaultMSALProcessorHandlerResolver
+  implements ProcessorHandlerResolver {
   public async Resolve(
     ioc: IoCContainer,
     appProcCfg: EaCApplicationProcessorConfig,

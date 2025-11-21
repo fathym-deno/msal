@@ -1,4 +1,9 @@
-import { type EaCRuntimeConfig, type EaCRuntimePlugin, type EaCRuntimePluginConfig, IoCContainer } from "../src.deps.ts";
+import {
+  type EaCRuntimeConfig,
+  type EaCRuntimePlugin,
+  type EaCRuntimePluginConfig,
+  IoCContainer,
+} from "../src.deps.ts";
 import { EaCMSALProcessorHandlerResolver } from "./EaCMSALProcessorHandlerResolver.ts";
 import type { MSALSessionDataLoaderResolver } from "./MSALSessionDataLoaderResolver.ts";
 
