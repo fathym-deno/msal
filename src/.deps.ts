@@ -1,5 +1,5 @@
-export { redirectRequest } from "jsr:@fathym/common@0.2.289-integration/http";
-export { telemetryFor } from "jsr:@fathym/common@0.2.289-integration/telemetry";
+export { redirectRequest } from "jsr:@fathym/common@0.2.292-integration/http";
+export { telemetryFor } from "jsr:@fathym/common@0.2.292-integration/telemetry";
 
 export { type EverythingAsCode } from "jsr:@fathym/eac@0.2.141-hmis";
 export { type EaCRuntimeContext } from "jsr:@fathym/eac@0.2.141-hmis/runtime";
