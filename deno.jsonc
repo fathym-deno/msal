@@ -8,7 +8,7 @@
     "build": "deno task build:fmt && deno task build:lint && deno task publish:check && deno task test",
     "build:fmt": "deno fmt",
     "build:lint": "deno lint",
-    "deploy": "deno task build && ftm git",
+    "deploy": "deno task build && fathym git",
     "npm:build": "deno run -A scripts/npm.build.ts",
     "npm:publish": "npm publish ./build --access public",
     "publish:check": "deno publish --dry-run --allow-dirty",
