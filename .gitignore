@@ -5,6 +5,4 @@ cov/
 build/
 coverage/
 lcov/
-
-.logs/runtime-*.jsonl
 target/
