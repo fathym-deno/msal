@@ -1,6 +1,10 @@
 .env
 cov/
+
+.logs/runtime-*.jsonl
 build/
 coverage/
 lcov/
+
+.logs/runtime-*.jsonl
 target/
