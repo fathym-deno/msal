@@ -5,6 +5,7 @@ import type {
   EverythingAsCode,
   IoCContainer,
   ProcessorHandlerResolver,
+  ProcessorHandlerResult,
 } from "../.deps.ts";
 
 export class DefaultMSALProcessorHandlerResolver
@@ -13,7 +14,7 @@ export class DefaultMSALProcessorHandlerResolver
     ioc: IoCContainer,
     appProcCfg: EaCApplicationProcessorConfig,
     eac: EverythingAsCode,
-  ): Promise<EaCRuntimeHandler | undefined> {
+  ): Promise<EaCRuntimeHandler | ProcessorHandlerResult | undefined> {
     let toResolveName: string = "";
 
     if (isEaCMSALProcessor(appProcCfg.Application.Processor)) {
