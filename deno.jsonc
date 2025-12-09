@@ -1,6 +1,6 @@
 {
   "name": "@fathym/msal",
-  "version": "0.0.0",
+  "version": "0.0.85-eac-cascade",
   "exports": {
     ".": "./src/.exports.ts"
   },
@@ -27,12 +27,18 @@
   },
   "lock": false,
   "fmt": {
-    "include": ["./**/*.ts", "./**/*.tsx"],
+    "include": [
+      "./**/*.ts",
+      "./**/*.tsx"
+    ],
     "exclude": [],
     "options": {}
   },
   "lint": {
-    "include": ["./**/*.ts", "./**/*.tsx"],
+    "include": [
+      "./**/*.ts",
+      "./**/*.tsx"
+    ],
     "exclude": [],
     "rules": {
       "include": [],
