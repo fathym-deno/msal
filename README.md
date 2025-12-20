@@ -47,7 +47,7 @@ To get started with MSAL for Deno, add the following to your `deno.json` configu
 ```json
 {
   "imports": {
-    "@fathym/msal": "jsr:@fathym/msal@0.0.99-eac-cascade",
+    "@fathym/msal": "jsr:@fathym/msal@0.0.100-eac-cascade",
     "$fresh/session": "https://deno.land/x/fresh_session@${VERSION}/mod.ts",
     "preact": "npm:preact@${VERSION}",
     "preact/": "npm:preact@${VERSION}/",
