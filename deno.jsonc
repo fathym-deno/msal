@@ -5,7 +5,8 @@
     ".": "./src/.exports.ts"
   },
   "tasks": {
-    "build": "deno task build:fmt && deno task build:lint && deno task publish:check && deno task test",
+    "build": "deno task build:fmt && deno task build:lint && deno task build:check && deno task publish:check && deno task test",
+    "build:check": "deno check **/*.ts",
     "build:fmt": "deno fmt",
     "build:lint": "deno lint",
     "deploy": "deno task build && fathym git",
@@ -13,7 +14,7 @@
     "npm:publish": "npm publish ./build --access public",
     "publish:check": "deno publish --dry-run --allow-dirty",
     "test": "deno test -A ./tests/.tests.ts --coverage=cov",
-    "version": "deno run -A jsr:@fathym/common@0.2.307-common-release/build/version"
+    "version": "deno run -A jsr:@fathym/common@0.2.309-common-release/build/version"
   },
   "imports": {},
   "compilerOptions": {
