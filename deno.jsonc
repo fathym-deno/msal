@@ -14,7 +14,7 @@
     "npm:publish": "npm publish ./build --access public",
     "publish:check": "deno publish --dry-run --allow-dirty",
     "test": "deno test -A ./tests/.tests.ts --coverage=cov",
-    "version": "deno run -A jsr:@fathym/common@0.2.309-common-release/build/version"
+    "version": "deno run -A jsr:@fathym/common@0.2.310-common-release/build/version"
   },
   "imports": {},
   "compilerOptions": {
