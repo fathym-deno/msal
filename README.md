@@ -54,7 +54,7 @@ configuration file (JSR + npm preferred):
 ```json
 {
   "imports": {
-    "@fathym/msal": "jsr:@fathym/msal@0.0.105-eac-cascade",
+    "@fathym/msal": "jsr:@fathym/msal@0.0.106-eac-cascade",
     "$fresh/session": "https://deno.land/x/fresh_session@${VERSION}/mod.ts",
     "preact": "npm:preact@${VERSION}",
     "preact/": "npm:preact@${VERSION}/",
