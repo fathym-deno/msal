@@ -18,6 +18,7 @@ import { establishMsalAcquireTokenRoute } from "./routes/acquire-token.ts";
 import { establishMsalCallbackRoute } from "./routes/callback.ts";
 import { establishMsalSignInRoute } from "./routes/signin.ts";
 import { establishMsalSignOutRoute } from "./routes/signout.ts";
+import { buildTenantAuthority } from "../tenantAuthority.ts";
 
 export const EaCMSALProcessorHandlerResolver: ProcessorHandlerResolver = {
   async Resolve(
@@ -46,8 +47,20 @@ export const EaCMSALProcessorHandlerResolver: ProcessorHandlerResolver = {
       auth: {
         clientId: providerDetails.ClientID,
         clientSecret: providerDetails.ClientSecret,
-        authority:
-          `https://login.microsoftonline.com/${providerDetails.TenantID}`,
+        /**
+         * 🔴 VALIDATED — this interpolation predates the tenant-scoped sign-in
+         * and had NO validation of any kind.
+         *
+         * A stored `TenantID` reaches an identity-endpoint URL exactly the way
+         * a query param does; the only difference is how long ago it was
+         * written. ⛔ Validating only the NEW door and leaving the old one open
+         * is how a control ends up covering the path nobody attacks.
+         *
+         * `buildTenantAuthority` THROWS rather than falling back, so a
+         * malformed stored value fails at processor-resolve time — loudly, at
+         * startup — instead of minting tokens against a URL nobody intended.
+         */
+        authority: buildTenantAuthority(providerDetails.TenantID),
       },
       system: {
         loggerOptions: {
