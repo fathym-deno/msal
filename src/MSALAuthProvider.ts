@@ -59,9 +59,21 @@ export class MSALAuthProvider {
 
       await sessionDataLoader.Set(req, "idToken", idToken);
 
+      /**
+       * 🔴 WAS `"accessToken"` (lowercase) — A KEY NOTHING READS.
+       *
+       * Every reader and every other writer uses `"AccessToken"`
+       * (`HandleCallback` and the refresh path). So a silent refresh through
+       * `/azure/oauth/acquire-token` wrote a DEAD key and left the real one to
+       * expire on its own schedule — the session looked refreshed and was not.
+       *
+       * ⚠️ ⛔ Do NOT conflate this with the `["MSAL","UserData",idToken,
+       * "AccessToken"]` KV path elsewhere in this file: that is a different
+       * namespace, and it was never wrong.
+       */
       await sessionDataLoader.Set(
         req,
-        "accessToken",
+        "AccessToken",
         tokenResponse.accessToken,
       );
 
@@ -213,6 +225,19 @@ export class MSALAuthProvider {
        */
       scopes: options.Scopes || [],
       redirectUri: options.RedirectURI,
+
+      /**
+       * 🔑 TENANT-SCOPED SIGN-IN, LEG ONE. `@azure/msal-node` honours a
+       * per-request `authority` on `getAuthCodeUrl`, so this is what sends the
+       * user to the directory they picked rather than the configured one.
+       *
+       * ⛔ Spread conditionally: an `undefined` here is not the same as absent
+       * to every msal version, and the whole point of `Authority?` being
+       * optional is that an existing caller's behaviour is byte-unchanged.
+       */
+      ...(options.Authority ? { authority: options.Authority } : {}),
+      ...(options.Prompt ? { prompt: options.Prompt } : {}),
+      ...(options.DomainHint ? { domainHint: options.DomainHint } : {}),
     };
 
     const authCodeRequestParams: AuthorizationCodeRequest = {
@@ -225,6 +250,18 @@ export class MSALAuthProvider {
       scopes: options.Scopes || [],
       redirectUri: options.RedirectURI,
       code: "",
+
+      /**
+       * 🔴 LEG TWO, AND IT IS THE ONE THAT IS EASY TO MISS.
+       *
+       * `HandleCallback` rehydrates this stored `authCodeRequest` and feeds it
+       * to `acquireTokenByCode`, which honours `validRequest.authority`.
+       * ⛔ Omitting it here sends the REDIRECT to the chosen directory and the
+       * REDEMPTION to the configured one — and the failure is a silently
+       * wrong-tenant token, not an error. Every downstream check then answers
+       * correctly about the wrong directory.
+       */
+      ...(options.Authority ? { authority: options.Authority } : {}),
     };
 
     /**
@@ -233,9 +270,24 @@ export class MSALAuthProvider {
      * metadata discovery calls, thereby improving performance of token acquisition process. For more, see:
      * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-node/docs/performance.md
      */
+    /**
+     * 🔴 THE MEMO IS SKIPPED WHEN THE AUTHORITY IS OVERRIDDEN, AND THAT IS NOT
+     * AN OPTIMISATION DETAIL.
+     *
+     * `getAuthorityMetadata()` fetches
+     * `${msalConfig.auth.authority}/v2.0/.well-known/openid-configuration` and
+     * the result is written onto `this.msalConfig.auth`, which is SHARED and
+     * MUTABLE. It is therefore metadata for the CONFIGURED directory.
+     *
+     * ⛔ Leaving it in place while signing in to a DIFFERENT directory would
+     * validate a tenant-B authority against tenant-A metadata. Skipping costs
+     * one discovery round trip on the tenant-scoped path and keeps the fast
+     * path for the common case exactly as it was.
+     */
     if (
-      !this.msalConfig.auth.cloudDiscoveryMetadata ||
-      !this.msalConfig.auth.authorityMetadata
+      !options.Authority &&
+      (!this.msalConfig.auth.cloudDiscoveryMetadata ||
+        !this.msalConfig.auth.authorityMetadata)
     ) {
       const [cloudDiscoveryMetadata, authorityMetadata] = await Promise.all([
         this.getCloudDiscoveryMetadata(),
