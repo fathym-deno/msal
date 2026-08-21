@@ -36,6 +36,28 @@ const GUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const DOMAIN =
   /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/i;
 
+/**
+ * ENTRA'S THREE DIRECTORY-INDEPENDENT AUTHORITIES, AND THEY ARE NOT AN
+ * EXCEPTION TO THE RULE -- THEY ARE PART OF IT.
+ *
+ * `common`, `organizations` and `consumers` are authority path segments Entra
+ * defines, and they are what a MULTI-TENANT app configures when it deliberately
+ * does not pin sign-in to one directory. `AZURE_AD_TENANT_ID=organizations` is
+ * exactly that configuration, and it is what this platform ships.
+ *
+ * OMITTING THEM WAS A REAL DEFECT AND IT CRASHED A RUNTIME AT BOOT.
+ * `EaCMSALProcessorHandlerResolver` validates a STORED `TenantID` through
+ * `buildTenantAuthority`, which THROWS rather than falling back -- so a shape
+ * derived from the new `?tenant=` query-param path got applied to an EXISTING
+ * config path that legitimately carries these three, and the process exited
+ * before it served a single request.
+ *
+ * They are safe by the same test as everything else here: no `/`, backslash,
+ * `?`, `#`, `@`, scheme or percent-encoding, so nothing can climb out of the
+ * path segment.
+ */
+const SPECIAL_AUTHORITIES = new Set(["common", "organizations", "consumers"]);
+
 /** Whether `tenantID` is a shape we will interpolate into an authority URL. */
 export function isAcceptableTenantID(tenantID: unknown): boolean {
   if (typeof tenantID !== "string") return false;
@@ -43,6 +65,8 @@ export function isAcceptableTenantID(tenantID: unknown): boolean {
   const t = tenantID.trim();
 
   if (!t || t.length > 253) return false;
+
+  if (SPECIAL_AUTHORITIES.has(t.toLowerCase())) return true;
 
   return GUID.test(t) || DOMAIN.test(t);
 }

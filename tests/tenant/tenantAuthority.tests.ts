@@ -138,3 +138,54 @@ Deno.test("🔴 buildTenantAuthority THROWS rather than falling back — the who
     },
   );
 });
+
+/**
+ * THE REGRESSION THIS SUITE DID NOT CATCH THE FIRST TIME, PINNED SO IT CANNOT
+ * RECUR.
+ *
+ * The validator shipped accepting only a GUID or a directory domain. That is
+ * right for a `?tenant=` value a user picked, and WRONG for the stored
+ * `TenantID` the processor resolver has always interpolated -- a multi-tenant
+ * app configures `organizations` there, and `buildTenantAuthority` THROWS, so
+ * the runtime died at boot before serving a request.
+ *
+ * These are Entra's own directory-independent authorities, not a loophole.
+ */
+Deno.test("isAcceptableTenantID — Entra's directory-independent authorities are ACCEPTED", async (t) => {
+  for (const special of ["common", "organizations", "consumers"]) {
+    await t.step(
+      `accepts ${special}`,
+      () => assert(isAcceptableTenantID(special)),
+    );
+  }
+
+  await t.step(
+    "and they are case-insensitive, like every other shape here",
+    () => assert(isAcceptableTenantID("Organizations")),
+  );
+
+  await t.step("the authority builds, rather than throwing", () =>
+    assertEquals(
+      buildTenantAuthority("organizations"),
+      "https://login.microsoftonline.com/organizations",
+    ));
+});
+
+Deno.test("🔴 CONTROL: widening for the three aliases did NOT widen anything else", async (t) => {
+  // The point of the control is that the refusals above still refuse. A guard
+  // that started accepting everything would pass the acceptance test alone.
+  for (
+    const bad of [
+      "commons",
+      "organization",
+      "../../common",
+      "common/evil",
+      "common.evil.com/x",
+    ]
+  ) {
+    await t.step(
+      `still refuses ${JSON.stringify(bad)}`,
+      () => assertEquals(isAcceptableTenantID(bad), false, `accepted ${bad}`),
+    );
+  }
+});
